@@ -124,10 +124,10 @@ def saveToDatabase(filename):
             attributeNameValueSplit = str(attributeLineSplit).split(',')
             attributeNameBadFormat = str(attributeNameValueSplit[0])
             attributeName = attributeNameBadFormat[4:-1]
-            if (attributeName == attribute):
+            if attributeName == attribute:
                 attributeValueSplit = str(attributeNameValueSplit[1])
                 attributeValue = attributeValueSplit[2:-1]
-                if(attributeValue == ''):
+                if attributeValue == '':
                     continue
                 else:
                     values[attributes.index(attribute)] = attributeValue

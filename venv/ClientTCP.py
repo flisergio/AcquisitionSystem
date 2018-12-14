@@ -1,11 +1,11 @@
 import socket  # Imports socket module
-import time  # Imports time module for operations with time
 import sys  # Imports sys module for system operations
+import time  # Imports time module for operations with time
 
+import CSVExchanging
+import MailExchanging
 #       -----  IMPORTS FROM PROJECT ------
 import virtualenv
-import MailExchanging
-import CSVExchanging
 
 #       -----  GLOBAL VARIABLES NEEDED FOR TCP ------
 s = socket.socket()  # Creates a socket object
@@ -68,7 +68,8 @@ def performTCP():
                     toSend = 'SaveTrouble!'
                     s.send(toSend.encode())
                     print(toSend)
-                    MailExchanging.sendMail(MailExchanging.subFileUnexpectedError + nameOfFile, MailExchanging.textFileUnexpectedError + nameOfFile + '.')
+                    MailExchanging.sendMail(MailExchanging.subFileUnexpectedError + nameOfFile,
+                                            MailExchanging.textFileUnexpectedError + nameOfFile + '.')
             else:  # If data is a packet client saves it in CSV file in a loop that depends on number of packets
                 print('Writing...')
                 try:
@@ -97,15 +98,15 @@ def main():
                     performTCP()
             except KeyboardInterrupt:
                 print('Manual break by user')
-                MailExchanging.sendMail(MailExchanging.subKeyboardInterruptError, MailExchanging.textKeyboardInterruptError)
+                MailExchanging.sendMail(MailExchanging.subKeyboardInterruptError,
+                                        MailExchanging.textKeyboardInterruptError)
                 break
         except TimeoutError:
             print('Connection declined! Trying again in 30 seconds.')
-        #    MailExchanging.sendMail(subConnectionError, textConnectionError)
+            #    MailExchanging.sendMail(subConnectionError, textConnectionError)
             time.sleep(30)
 
 
 #       -----  MAIN FUNCTION CALL ------
 if __name__ == '__main__':
     main()
-
