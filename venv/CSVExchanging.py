@@ -227,6 +227,9 @@ def sendDailyRaport():
     CSVExchanging.connectDB().close()
 
     mailSubject = 'Spool production raport for ' + dateForMail
-    mailText = 'Spools producted: ' + str(
-        numOfSpools) + '\n\n' + diameterForMail + massForMail + materialForMail + colorForMail
+    mailText = 'Total spools produced: ' + str(numOfSpools) + '\n\n' + \
+               ' \t\t\t----- Diameter value: number of spools with this diameter ----- \n' + diameterForMail + '\n' + \
+               ' \t\t\t----- Mass value: number of spools with this mass ----- \n' + massForMail + '\n' + \
+               ' \t\t\t----- Material value: number of spools with this material ----- \n' + materialForMail + '\n' + \
+               ' \t\t\t----- Color value: number of spools with this color ----- \n' + colorForMail + '\n'
     MailExchanging.sendMail(mailSubject, mailText)

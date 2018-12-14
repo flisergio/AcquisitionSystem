@@ -48,7 +48,7 @@ myPass = '!koMORA1'
 #       -----  EXECUTES MAIL COMMUNICATION  ------
 def sendMail(subject, text):
     myMail = 'acqsys@mora-solutions.com'
-    recMails = ['maciejjakubek@gmail.com', 'sergey.dko@gmail.com']
+    recMails = ['sergey.dko@gmail.com']
     server = smtplib.SMTP('smtp.mora-solutions.com', 587)
     server.ehlo()
     server.starttls()
