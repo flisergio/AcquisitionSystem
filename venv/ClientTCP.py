@@ -1,6 +1,7 @@
 import socket  # Imports socket module
 import sys  # Imports sys module for system operations
 import time  # Imports time module for operations with time
+import datetime   # Imports datetime module for getting date and time
 
 import CSVExchanging
 import MailExchanging
@@ -107,6 +108,9 @@ def main():
             print('Connection declined! Trying again in 30 seconds.')
             #    MailExchanging.sendMail(subConnectionError, textConnectionError)
             time.sleep(30)
+
+    if(datetime.datetime.now().time().strftime('%H:%M:%S') == '00:00:00'):
+        CSVExchanging.sendDailyReport()
 
 
 #       -----  MAIN FUNCTION CALL ------

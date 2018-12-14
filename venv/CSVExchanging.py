@@ -1,5 +1,5 @@
 import csv  # Imports csv module for working with CSV files
-import datetime  # Imports datetime module for getting date
+import datetime  # Imports datetime module for getting date and time
 import hashlib  # Imports module for hashing
 import os.path  # Imports module for pathing
 import sys  # Imports sys module for system operations
@@ -178,7 +178,7 @@ def sendDailyRaport():
         numWithSpoolDiameter = cur.fetchone()[0]
         diameterSubtext = 'With diameter ' + str(value)[1:-2] + ': ' + str(numWithSpoolDiameter)
         diameterForMail = diameterForMail + diameterSubtext + '\n'
-        
+
     #  ----- FINDING DIFFERENT MASS VALUES BY DATE FOR MAIL -----
     queryForMassValues = 'SELECT DISTINCT mass FROM spool WHERE date BETWEEN \'' + dateTimeDayBefore + \
                          ' 00:00:00\' AND \'' + dateTimeDayBefore + ' 23:59:59\' ORDER BY mass;'

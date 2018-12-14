@@ -2,7 +2,7 @@ import csv  # Imports csv module for working with CSV files
 import hashlib  # Imports module for hashing
 import os.path  # Imports module for pathing
 import time  # Imports time module for operations with time
-import datetime   # Imports datetime module for getting date
+import datetime   # Imports datetime module for getting date and time
 import sys  # Imports sys module for system operations
 
 #       -----  IMPORTS FROM PROJECT ------
@@ -169,7 +169,6 @@ def sendDailyRaport():
 def main():
     #saveDB('107')
     sendDailyRaport()
-
 
 #       -----  MAIN FUNCTION CALL ------
 if __name__ == '__main__':
