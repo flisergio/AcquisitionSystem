@@ -8,7 +8,6 @@ import sys  # Imports sys module for system operations
 import virtualenv
 import psycopg2
 import MailExchanging
-#import pg
 
 #       -----  GLOBAL VARIABLES NEEDED FOR FILE FINDING  ------
 pathClient = 'C:\\Users\\fliesrgio\\Work\\Maciek\\Filament control system\\Server\\'
@@ -77,7 +76,6 @@ def connectDB(q):
     password = '!koMORA'
     dbname = 'acqsys'
 
-    # Simple routine to run a query on a database and print the results:
     def doQuery(conn):
         cur = conn.cursor()
         cur.execute(q)
@@ -86,53 +84,57 @@ def connectDB(q):
     myConnection.autocommit = True
     doQuery(myConnection)
     myConnection.close()
-    """
-    conn = pg.DB(host='217.182.72.46', user='flisergio', passwd='!koMORA', dbname='acqsys')
-    conn.query(q)
 
-    conn.close()
-    """
 
 #       -----  SAVES INFORMATION ABOUT SPOOL IN DATABASE ------
 def saveToDatabase(filename):
-    attributes = ['Material', 'ColorName', 'ColorRAL', 'Diameter', 'Tolerance', 'Mass',
-                  'PrintingTemperature', 'SpoolDiameterExternal', 'SpoolDiameterInternal', 'SpoolWidth']
-    values = ['', '', '', 0.0, 0.0, 0, 0, 0, 0, 0]
+    attributes = ['Material', 'ColorName', 'ColorRal', 'Diameter', 'Tolerance', 'Mass',
+                  'PrintingTamp', 'SpoolDiaExt', 'SpoolDiaInt', 'SpoolWidth']
+    values = ['!!!', '!!!', '!!!', 999, 999, 999, 999, 999, 999, 999]
 
     pathCSV = pathClient + filename + str('.csv')
     fileCSV = open(pathCSV, 'r')
     csv_reader = csv.reader(fileCSV, delimiter = ';')
 
-    nameOfFile = int(filename)
-    hashedName = hashData(filename)
+    nameOfFile = filename
+    hashedName = CSVExchanging.hashData(filename)
 
     next(csv_reader)
+    #  ----- READING GENERATION DATE FROM FILE -----  #
+    dateLineSplit = str(next(csv_reader)).split(';')
+    dateLineFirstElement = dateLineSplit[0].split('#')
+    dateLineFirstElementSplit = str(dateLineFirstElement).split(',')
+    dateBadFormat = str(dateLineFirstElementSplit[2])
+    dateBadFormatSplit = dateBadFormat.split('-')
+    generationDate = (dateBadFormatSplit[0] + '-' + dateBadFormatSplit[1] + '-' + dateBadFormatSplit[2])[2:]
+    generationTime = (dateBadFormatSplit[3])[:-1]
+    generationDateTime = generationDate + ' ' + generationTime
 
-    generationDate = str(next(csv_reader).split(';'))
+    #  ----- SKIPPING LINES -----  #
+    next(csv_reader)
+    next(csv_reader)
+    next(csv_reader)
+    next(csv_reader)
 
+    #  ----- READING EACH ATTRIBUTE FROM FILE -----  #
     for line in csv_reader:
         for attribute in attributes:
-            if line.startswith(attribute):
-                lineSplit = line.split(';')
-                temp = str(lineSplit[1])
-                if[(attributes.index(attribute) == 0) or (attributes.index(attribute) == 1) or (attributes.index(attribute) == 2)]:
-                    if temp == '':
-                        values[attributes.index(attribute)] = '!'
-                    else:
-                        values[attributes.index(attribute)] = temp
-                if[(attributes.index(attribute) == 3) or (attributes.index(attribute) == 4)]:
-                    if temp == '':
-                        values[attributes.index(attribute)] = 999
-                    else:
-                        values[attributes.index(attribute)] = float(temp)
-                if [(attributes.index(attribute) == 5) or (attributes.index(attribute) == 6) or (attributes.index(attribute) == 7)
-                        or (attributes.index(attribute) == 8) or (attributes.index(attribute) == 9)]:
-                    if temp == '':
-                        values[attributes.index(attribute)] = 999
-                    else:
-                        values[attributes.index(attribute)] = int(temp)
-
-    query = 'INSERT INTO spool VALUES (\'' + hashedName + '\', ' + nameOfFile + ', \'' + generationDate + '\', \''  + \
-        values[0] + '\', \'' + values[1] + '\', \'' + values[2] + '\', ' + values[3] + ', ' + values[4] + ', ' + values[5] + \
-        ', ' + values[6] + ', ' + values[7] + ', ' + values[8] + ', ' + values[9] + ', \'' + pathCSV + '\');'
-    connectDB(query)
+            attributeLineSplit = str(line).split(';')
+            attributeNameValueSplit = str(attributeLineSplit).split(',')
+            attributeNameBadFormat = str(attributeNameValueSplit[0])
+            attributeName = attributeNameBadFormat[4:-1]
+            if (attributeName == attribute):
+                attributeValueSplit = str(attributeNameValueSplit[1])
+                attributeValue = attributeValueSplit[2:-1]
+                if(attributeValue == ''):
+                    continue
+                else:
+                    values[attributes.index(attribute)] = attributeValue
+    #print(values)  # For printing values list
+    
+    #  ----- INSERTING ATTRIBUTE VALUES IN DATABASE -----  #
+    query = 'INSERT INTO spool VALUES (\'' + hashedName + '\', ' + nameOfFile + ', \'' + generationDateTime + '\', \'' + values[0] + \
+            '\', \'' + values[1] + '\', \'' + values[2] + '\', ' + str(values[3]) + ', ' + str(values[4]) + ', ' + str(values[5]) + \
+            ', ' + str(values[6]) + ', ' + str(values[7]) + ', ' + str(values[8]) + ', ' + str(values[9]) + ', \'' + pathClient + '\');'
+    CSVExchanging.connectDB(query)
+    #print(query)    # For printing result query

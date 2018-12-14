@@ -8,9 +8,9 @@ from other apps.
 * After this run the code *
 """
 
-import smtplib
+import smtplib  # Imports smtplib module for mail communication
 
-#       -----  CLOBAL VARIABLES NEEDED FOR MAIL COMMUNICATION  ------
+#       -----  GLOBAL VARIABLES NEEDED FOR MAIL COMMUNICATION  ------
 subFileSavingError = 'Error with saving CSV file '
 textFileSavingError = 'Error exists. Could not save file '
 

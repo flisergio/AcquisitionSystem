@@ -4,8 +4,8 @@ import sys  # Imports sys module for system operations
 
 #       -----  IMPORTS FROM PROJECT ------
 import virtualenv
-import mail.MailExchanging
-import csv_sql.CSVExchanging
+import MailExchanging
+import CSVExchanging
 
 #       -----  GLOBAL VARIABLES NEEDED FOR TCP ------
 s = socket.socket()  # Creates a socket object
