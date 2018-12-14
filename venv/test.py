@@ -2,12 +2,7 @@ import csv  # Imports csv module for working with CSV files
 import hashlib  # Imports module for hashing
 import datetime   # Imports datetime module for getting date
 import sys
-sys.path.append('C:\\Users\\fliesrgio\\Work\\Maciek\\Filament control system\\Acquisiton system\\venv\\Scripts\\csv')
-
 import CSVExchanging
-
-pathClient = 'C:\\Users\\fliesrgio\\Work\\Maciek\\Filament control system\\Server\\'
-
 
 
 #       -----  SAVES INFORMATION ABOUT SPOOL IN DATABASE ------
@@ -34,7 +29,7 @@ def saveDB(filename):
     generationTime = (dateBadFormatSplit[3])[:-1]
     generationDateTime = generationDate + ' ' + generationTime
 
-    #  ----- SKIPPING LINES -----  #
+    #  ----- SKIPPING UNNECESSARY LINES -----  #
     next(csv_reader)
     next(csv_reader)
     next(csv_reader)

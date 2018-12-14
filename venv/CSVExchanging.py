@@ -4,6 +4,7 @@ import os.path  # Imports module for pathing
 import time  # Imports time module for operations with time
 import datetime   # Imports datetime module for getting date
 import sys  # Imports sys module for system operations
+
 #       -----  IMPORTS FROM PROJECT ------
 import virtualenv
 import psycopg2
@@ -110,7 +111,7 @@ def saveToDatabase(filename):
     generationTime = (dateBadFormatSplit[3])[:-1]
     generationDateTime = generationDate + ' ' + generationTime
 
-    #  ----- SKIPPING LINES -----  #
+    #  ----- SKIPPING UNNECESSARY LINES -----  #
     next(csv_reader)
     next(csv_reader)
     next(csv_reader)
@@ -131,7 +132,7 @@ def saveToDatabase(filename):
                 else:
                     values[attributes.index(attribute)] = attributeValue
     #print(values)  # For printing values list
-    
+
     #  ----- INSERTING ATTRIBUTE VALUES IN DATABASE -----  #
     query = 'INSERT INTO spool VALUES (\'' + hashedName + '\', ' + nameOfFile + ', \'' + generationDateTime + '\', \'' + values[0] + \
             '\', \'' + values[1] + '\', \'' + values[2] + '\', ' + str(values[3]) + ', ' + str(values[4]) + ', ' + str(values[5]) + \
