@@ -71,19 +71,19 @@ def performTCP():
                                 toSend = 'HashTrouble!'
                                 s.send(toSend.encode())
                                 print(toSend)
-                                MailExchanging.sendMail(MailExchanging.subDataHashingError + nameOfFile,
-                                                        MailExchanging.textDataHashingError + nameOfFile + '.')
+                                MailExchanging.sendMail(MailExchanging.MailVariables.subDataHashingError + nameOfFile,
+                                                        MailExchanging.MailVariables.textDataHashingError + nameOfFile + '.')
                         except:
                             toSend = 'PSQLTrouble!'
                             s.send(toSend.encode())
                             print(toSend)
-                            MailExchanging.sendMail(MailExchanging.subDatabaseError, MailExchanging.textDatabaseError)
+                            MailExchanging.sendMail(MailExchanging.MailVariables.subDatabaseError, MailExchanging.MailVariables.textDatabaseError)
                     except:
                         toSend = 'SaveTrouble!'
                         s.send(toSend.encode())
                         print(toSend)
-                        MailExchanging.sendMail(MailExchanging.subFileUnexpectedError + nameOfFile,
-                                                MailExchanging.textFileUnexpectedError + nameOfFile + '.')
+                        MailExchanging.sendMail(MailExchanging.MailVariables.subFileUnexpectedError + nameOfFile,
+                                                MailExchanging.MailVariables.textFileUnexpectedError + nameOfFile + '.')
                 else:  # If data is a packet client saves it in CSV file in a loop that depends on number of packets
                     print('Writing...')
                     try:
@@ -92,19 +92,19 @@ def performTCP():
                         s.send(toSend.encode())
                         print(toSend)
                     except:
-                        MailExchanging.sendMail(MailExchanging.subFileAppendingError,
-                                                MailExchanging.textFileAppendingError)
+                        MailExchanging.sendMail(MailExchanging.MailVariables.subFileAppendingError,
+                                                MailExchanging.MailVariables.textFileAppendingError)
                         print('Unexpected error:', sys.exc_info()[0])
                 data = ''
             except OSError:
                 print('Receiving data disallowed! Socket is probably not connected and no address was supplied.')
-                MailExchanging.sendMail(MailExchanging.subDataReceivingError, MailExchanging.textDataReceivingError)
+                MailExchanging.sendMail(MailExchanging.MailVariables.subDataReceivingError, MailExchanging.MailVariables.textDataReceivingError)
                 thSleep5 = threading.Thread(target=Multithreading().doSleep, args=(5,)).start()
     except KeyboardInterrupt:
         print('Manual break by user!')
         s.close()
         print('Connection closed!')
-        MailExchanging.sendMail(MailExchanging.subKeyboardInterruptError, MailExchanging.textKeyboardInterruptError)
+        MailExchanging.sendMail(MailExchanging.MailVariables.subKeyboardInterruptError, MailExchanging.MailVariables.textKeyboardInterruptError)
 
 
 #       -----  MAIN FUNCTION ------
@@ -117,18 +117,18 @@ def main():
                     performTCP()
             except KeyboardInterrupt:
                 print('Manual break by user')
-                MailExchanging.sendMail(MailExchanging.subKeyboardInterruptError,
-                                        MailExchanging.textKeyboardInterruptError)
+                MailExchanging.sendMail(MailExchanging.MailVariables.subKeyboardInterruptError,
+                                        MailExchanging.MailVariables.textKeyboardInterruptError)
                 break
         except TimeoutError:
             print('Connection declined! Trying again in 30 seconds.')
-            #    MailExchanging.sendMail(MailExchanging.subConnectionError, MailExchanging.textConnectionError)
+            #    MailExchanging.sendMail(MailExchanging.MailVariables.subConnectionError, MailExchanging.MailVariables.textConnectionError)
             thSleep30 = threading.Thread(target=Multithreading().doSleep, args=(30,)).start()
         try:
             thRaport = threading.Thread(target=Multithreading().dailyRaport).start()
         except:
             print('Error with creating and sending daily raport')
-            MailExchanging.sendMail(MailExchanging.subRaportError, MailExchanging.textRaportError)
+            MailExchanging.sendMail(MailExchanging.MailVariables.subRaportError, MailExchanging.MailVariables.textRaportError)
 
 
 #       -----  MAIN FUNCTION CALL ------

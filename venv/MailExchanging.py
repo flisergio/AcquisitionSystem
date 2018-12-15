@@ -11,56 +11,57 @@ from other apps.
 import smtplib  # Imports smtplib module for mail communication
 
 #       -----  GLOBAL VARIABLES NEEDED FOR MAIL COMMUNICATION  ------
-subFileSavingError = 'Error with saving CSV file '
-textFileSavingError = 'Error exists. Could not save file '
+class MailVariables:
+    subFileSavingError = 'Error with saving CSV file '
+    textFileSavingError = 'Error exists. Could not save file '
 
-subFileReadingError = 'Error with reading CSV file '
-textFileReadingError = 'Error exists. Could not read file '
+    subFileReadingError = 'Error with reading CSV file '
+    textFileReadingError = 'Error exists. Could not read file '
 
-subFileUnexpectedError = 'Unexpected error with CSV file '
-textFileUnexpectedError = 'Unexpected error appeared while tried to save file '
+    subFileUnexpectedError = 'Unexpected error with CSV file '
+    textFileUnexpectedError = 'Unexpected error appeared while tried to save file '
 
-subFileNotExistError = 'File does not exists'
-textFileNotExistError = 'Cant read file, bacause it does not exist.'
+    subFileNotExistError = 'File does not exists'
+    textFileNotExistError = 'Cant read file, bacause it does not exist.'
 
-subDataReceivingError = 'Error with receiving data'
-textDataReceivingError = 'Receiving data disallowed! Error appeared. ' \
-                         'Socket is probably not connected and no address was supplied.'
+    subDataReceivingError = 'Error with receiving data'
+    textDataReceivingError = 'Receiving data disallowed! Error appeared. ' \
+                             'Socket is probably not connected and no address was supplied.'
 
-subDataHashingError = 'Unexpected error with hashing CSV file '
-textDataHashingError = 'Unexpected error appeared while tried to hash name of file '
+    subDataHashingError = 'Unexpected error with hashing CSV file '
+    textDataHashingError = 'Unexpected error appeared while tried to hash name of file '
 
-subDatabaseError = 'Error with writing to database'
-textDatabaseError = 'Error appeared with writing to database.'
+    subDatabaseError = 'Error with writing to database'
+    textDatabaseError = 'Error appeared with writing to database.'
 
-subRaportError = 'Error with creating and sending daily raport'
-textRaportError = 'Daily raport hasn\'t been sent! Error exists.'
+    subRaportError = 'Error with creating and sending daily raport'
+    textRaportError = 'Daily raport hasn\'t been sent! Error exists.'
 
-subFileAppendingError = 'Unexpected error with appending'
-textFileAppendingError = 'Unexpected error appeared while tried to append next CSV file.'
+    subFileAppendingError = 'Unexpected error with appending'
+    textFileAppendingError = 'Unexpected error appeared while tried to append next CSV file.'
 
-subKeyboardInterruptError = 'Manual break by user'
-textKeyboardInterruptError = 'Executing stopped because of manual breaking by user (all connections closed).'
+    subKeyboardInterruptError = 'Manual break by user'
+    textKeyboardInterruptError = 'Executing stopped because of manual breaking by user (all connections closed).'
 
-subConnectionError = 'Error with connection to server'
-textConnectionError = 'Connection declined! Trying again in 30 seconds.'
+    subConnectionError = 'Error with connection to server'
+    textConnectionError = 'Connection declined! Trying again in 30 seconds.'
 
-myPass = '!koMORA1'
+    myMail = 'acqsys@mora-solutions.com'
+    myPass = '!koMORA1'
 
 
 #       -----  EXECUTES MAIL COMMUNICATION  ------
 def sendMail(subject, text):
-    myMail = 'acqsys@mora-solutions.com'
     recMails = ['maciejjakubek@gmail.com','sergey.dko@gmail.com']
     server = smtplib.SMTP('smtp.mora-solutions.com', 587)
     server.ehlo()
     server.starttls()
-    server.login(myMail, myPass)
+    server.login(MailVariables.myMail, MailVariables.myPass)
     for recMail in recMails:
         body = '\r\n'.join(['To: %s' % recMail,
-                            'From: %s' % myMail,
+                            'From: %s' % MailVariables.myMail,
                             'Subject: %s' % subject,
                             '', text])
 
-        server.sendmail(myMail, [recMail], body)
+        server.sendmail(MailVariables.myMail, [recMail], body)
     print('Email successfully sent!')

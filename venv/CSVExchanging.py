@@ -32,12 +32,12 @@ def saveCSV(filename, data):
 
     except IOError:
         print('Could not read file ' + filename + '! ' + longText)
-        MailExchanging.sendMail(MailExchanging.subFileSavingError + filename,
-                                MailExchanging.textFileSavingError + filename + '.')
+        MailExchanging.sendMail(MailExchanging.MailVariables.subFileSavingError + filename,
+                                MailExchanging.MailVariables.textFileSavingError + filename + '.')
     except:
         print('Unexpected error:', sys.exc_info()[0])
-        MailExchanging.sendMail(MailExchanging.subFileUnexpectedError + filename,
-                                MailExchanging.textFileUnexpectedError + filename + '.')
+        MailExchanging.sendMail(MailExchanging.MailVariables.subFileUnexpectedError + filename,
+                                MailExchanging.MailVariables.textFileUnexpectedError + filename + '.')
 
 
 #       -----  READS CSV FILE IF EXISTS ------
@@ -55,12 +55,12 @@ def readCSV(filename):
                     print(line)
         except IOError:
             print('Could not read file ' + filename + '! ' + longText)
-            MailExchanging.sendMail(MailExchanging.subFileReadingError + filename,
-                                    MailExchanging.textFileReadingError + filename + '.')
+            MailExchanging.sendMail(MailExchanging.MailVariables.subFileReadingError + filename,
+                                    MailExchanging.MailVariables.textFileReadingError + filename + '.')
         except:
             print("Unexpected error:", sys.exc_info()[0])
-            MailExchanging.sendMail(MailExchanging.subFileUnexpectedError + filename,
-                                    MailExchanging.textFileUnexpectedError + filename + '.')
+            MailExchanging.sendMail(MailExchanging.MailVariables.subFileUnexpectedError + filename,
+                                    MailExchanging.MailVariables.textFileUnexpectedError + filename + '.')
 
     else:
         raise ValueError("%s isn't a file!" % pathClient + filename)
