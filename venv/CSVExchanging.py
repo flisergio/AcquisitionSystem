@@ -12,7 +12,7 @@ import psycopg2
 import virtualenv
 
 #       -----  GLOBAL VARIABLES NEEDED FOR FILE FINDING  ------
-pathClient = 'C:\\Users\\fliesrgio\\Work\\Maciek\\Filament control system\\Server\\'
+pathClient = 'C:\\Users\\fliesrgio\\Downloads\\'
 longText = 'Probably it does not exist or currently located in some other place!'
 
 
@@ -21,7 +21,7 @@ def saveCSV(filename, data):
     pathCSV = pathClient + filename + str('.csv')
 
     try:
-        """
+
         fileCSV = open(pathCSV, 'w')
         fileCSV.write(data)
         fileCSV.close()
@@ -29,7 +29,7 @@ def saveCSV(filename, data):
         with open(pathCSV, 'w', newline='') as fileCSV:
             csv_writer = csv.writer(fileCSV, delimiter=';')
             csv_writer.write(data)
-
+        """
     except IOError:
         print('Could not read file ' + filename + '! ' + longText)
         MailExchanging.sendMail(MailExchanging.MailVariables.subFileSavingError + filename,
@@ -45,7 +45,9 @@ def readCSV(filename):
     pathCSV = pathClient + filename + str('.csv')
 
     while not os.path.exists(pathCSV):
-        thSleep5 = threading.Thread(target=ClientTCP.Multithreading().doSleep, args=(5,)).start()
+        threadSleep5 = ClientTCP.myThread("ThreadSleep5", 5)
+        ClientTCP.threads.append(threadSleep5)
+        threadSleep5.start()
     if os.path.isfile(pathCSV):
         try:
             with open(pathCSV, 'r') as csv_file_r:
@@ -71,7 +73,7 @@ def hashData(dataToHash):
     now = datetime.datetime.now()
     currentDate = now.strftime("%d.%m.%Y")
     newData = str(dataToHash) + '.' + currentDate
-    print('Data to be hashed: ' + newData)
+    #print('Data to be hashed: ' + newData)
     hashObject = hashlib.md5(newData.encode())
     return hashObject.hexdigest()
 
@@ -99,7 +101,7 @@ def saveToDatabase(filename):
     csv_reader = csv.reader(fileCSV, delimiter=';')
 
     nameOfFile = filename
-    hashedName = CSVExchanging.hashData(filename)
+    hashedName = hashData(filename)
 
     next(csv_reader)
     #  ----- READING GENERATION DATE FROM FILE -----  #
@@ -110,7 +112,7 @@ def saveToDatabase(filename):
     dateBadFormatSplit = dateBadFormat.split('-')
     generationDate = (dateBadFormatSplit[0] + '-' + dateBadFormatSplit[1] + '-' + dateBadFormatSplit[2])[2:]
     generationTime = (dateBadFormatSplit[3])[:-1]
-    generationDateTime = generationDate + ' ' + generationTime
+    generationDateTime = (generationDate + ' ' + generationTime)[:-3]
 
     #  ----- SKIPPING UNNECESSARY LINES -----  #
     next(csv_reader)
@@ -121,26 +123,40 @@ def saveToDatabase(filename):
     #  ----- READING EACH ATTRIBUTE FROM FILE -----  #
     for line in csv_reader:
         for attribute in attributes:
-            attributeLineSplit = str(line).split(';')
-            attributeNameValueSplit = str(attributeLineSplit).split(',')
+            attributeNameValueSplit = str(line).split(',')
             attributeNameBadFormat = str(attributeNameValueSplit[0])
             attributeName = attributeNameBadFormat[4:-1]
             if attributeName == attribute:
+                print(line)
                 attributeValueSplit = str(attributeNameValueSplit[1])
-                attributeValue = attributeValueSplit[2:-1]
-                if attributeValue == '':
+                #print(attributeValueSplit)
+                attributeValue = attributeValueSplit[1:-3]
+                #print(attributeValue)
+                if attributeValue == '999':
+                    print('a')
+                    if attributes.index(attribute) == 0 or attributes.index(attribute) == 1 or attributes.index(attribute) == 2:
+                        values[attributes.index(attribute)] = '!!!'
+                    else:
+                        values[attributes.index(attribute)] = 999
+                    #attribute += 1
                     continue
                 else:
                     values[attributes.index(attribute)] = attributeValue
-    # print(values)  # For printing values list
+    #print(values)  # For printing values list
+    fileCSV.close()
 
     #  ----- INSERTING ATTRIBUTE VALUES IN DATABASE -----  #
-    query = 'INSERT INTO spool VALUES (\'' + hashedName + '\', ' + nameOfFile + ', \'' + generationDateTime + '\', \'' + \
-            values[0] + \
-            '\', \'' + values[1] + '\', \'' + values[2] + '\', ' + str(values[3]) + ', ' + str(values[4]) + ', ' + str(
-        values[5]) + \
-            ', ' + str(values[6]) + ', ' + str(values[7]) + ', ' + str(values[8]) + ', ' + str(
-        values[9]) + ', \'' + pathClient + '\');'
+    query = 'INSERT INTO spool VALUES (\'' + str(hashedName) + '\', ' + str(nameOfFile) + ', \'' + str(generationDateTime) + '\', \'' + \
+            str(values[0]) + '\', \'' + str(values[1]) + '\', \'' + str(values[2]) + '\', ' + str(float(values[3])) + ', ' + str(float(values[4])) + ', ' + str(
+            values[5]) + ', ' + str(values[6]) + ', ' + str(values[7]) + ', ' + str(values[8]) + ', ' + str(values[9]) + ', \'' + pathClient + '\');'
+    #print(query)
+    """
+    print(hashedName + '\n' + nameOfFile + '\n' + generationDateTime + '\n' +
+          str(values[0]) + '\n' + str(values[1]) + '\n' + str(values[2]) + '\n' +
+          str(values[3]) + '\n' + str(values[4]) + '\n' + str(values[5]) + '\n' +
+          str(values[6]) + '\n' + str(values[7]) + '\n' + str(values[8]) + '\n' +
+          str(values[9]) + '\n' + pathClient + '\n')
+    """
     cur = connectDB().cursor()
     cur.execute(query)
     connectDB().close()
@@ -242,7 +258,7 @@ def deleteSpool():
     cur = connectDB().cursor()
 
     dateTimeYearBeforeBadFormat = (datetime.datetime.now() - datetime.timedelta(days=366))
-    dateYearBeforeForMail = (dateYearBeforeBadFormat.strftime("%d.%m.%Y"))
+    dateYearBeforeForMail = (dateTimeYearBeforeBadFormat.strftime("%d.%m.%Y"))
     dateTimeYearBeforeStart = (dateTimeYearBeforeBadFormat.strftime("%Y-%m-%d") + ' 00:00:00')
     dateTimeYearBeforeEnd = (dateTimeYearBeforeBadFormat.strftime("%Y-%m-%d") + ' 23:59:59')
 

@@ -15,27 +15,75 @@ s = socket.socket()  # Creates a socket object
 host = '192.168.8.201'  # Ip address of TCP server
 port = 61470  # Reserves a port
 
+#       -----  CLASS FOR THREADING ------
+class myThread(threading.Thread):
+   def __init__(self, name, times):
+      threading.Thread.__init__(self)
+      self.name = name
+      self.times = times
 
-#  ----- CLASS FOR MULTITHREADING -----
-class Multithreading:
-    #  ----- FOR DAILY RAPORT -----
-    def dailyRaport(self):
-        while True:
-            if datetime.datetime.now().strftime('%X') == '00:00:00':
-                CSVExchanging.sendDailyRaport()
-                break
+   def run(self):
+       if self.name == "ThreadPerform":
+           #print('Starting ' + self.name)
+           runPerform()
+           #print('Finished ' + self.name)
+       if self.name == "ThreadRaport":
+           #print('Starting ' + self.name)
+           threadLock.acquire()
+           runRaport()
+           threadLock.release()
+           #print('Finished ' + self.name)
+       if self.name == "ThreadDeleting":
+           #print('Starting ' + self.name)
+           threadLock.acquire()
+           runDeleting()
+           threadLock.release()
+           #print('Finished ' + self.name)
+       if self.name.startswith("ThreadSleep"):
+           #print('Starting ' + self.name)
+           doSleep(int(self.times))
+           #print('Finished ' + self.name)
 
-    #  ----- FOR DELETING SPOOLS -----
-    def deleteSpool(self):
-        while True:
-            if datetime.datetime.now().strftime('%X') == '00:00:00':
-                CSVExchanging.deleteSpool()
-                break
+#       -----  FUNCTIONS FOR THREADING ------
+def doSleep(x):
+    time.sleep(x)
 
-    #  ----- FOR SLEEPING FUNCTIONS -----
-    def doSleep(self, x):
-        time.sleep(x)
+def runPerform():
+    while True:
+        performTCP()
+        time.sleep(1)
 
+def runRaport():
+    while True:
+        if datetime.datetime.now().strftime('%X') == '20:13:30':
+            CSVExchanging.sendDailyRaport()
+            break
+
+def runDeleting():
+    while True:
+        if datetime.datetime.now().strftime('%X') == '20:13:30':
+            CSVExchanging.deleteSpool()
+            break
+
+
+#       -----  VARIABLES FOR THREADING ------
+threadLock = threading.Lock()
+threads = []
+
+#       -----  CREATING NEW THREADS ------
+threadPerform = myThread("ThreadPerform", None)
+threadRaport = myThread("ThreadRaport", None)
+threadDeleting = myThread("ThreadDeleting", None)
+threadSleep5 = myThread("ThreadSleep5", 5)
+threadSleep30 = myThread("ThreadSleep30", 30)
+
+
+#       -----  ADDING THREADS TO THREADS LIST ------
+threads.append(threadPerform)
+threads.append(threadRaport)
+threads.append(threadDeleting)
+threads.append(threadSleep5)
+threads.append(threadSleep30)
 
 #       -----  EXCHANGES CSV FILES WITH SERVER  ------
 def performTCP():
@@ -54,7 +102,7 @@ def performTCP():
                     print(toSend)
                 elif data == 'Wait':  # If data is "Wait" client sleeps for 5 sec
                     print(data)
-                    thSleep5 = threading.Thread(target=Multithreading().doSleep, args=(5,)).start()
+                    threadSleep5.start()
                 elif (data.startswith(
                         'ToGo')):  # If data is "ToGo..." client sends "Ready,0" to server and starts waiting for packets
                     toSend = 'ReadyToWrite'
@@ -71,9 +119,9 @@ def performTCP():
                         try:
                             CSVExchanging.saveToDatabase(nameOfFile)
                             try:
-                                toSend = CSVExchanging.hashData(nameOfFile)
+                                toSend = 'Hashed:' + CSVExchanging.hashData(nameOfFile)
                                 s.send(toSend.encode())
-                                print('Hashed:' + toSend)
+                                print(toSend)
                             except:
                                 toSend = 'HashTrouble!'
                                 s.send(toSend.encode())
@@ -106,7 +154,7 @@ def performTCP():
             except OSError:
                 print('Receiving data disallowed! Socket is probably not connected and no address was supplied.')
                 MailExchanging.sendMail(MailExchanging.MailVariables.subDataReceivingError, MailExchanging.MailVariables.textDataReceivingError)
-                thSleep5 = threading.Thread(target=Multithreading().doSleep, args=(5,)).start()
+                threadSleep5.start()
     except KeyboardInterrupt:
         print('Manual break by user!')
         s.close()
@@ -120,8 +168,21 @@ def main():
         try:
             s.connect((host, port))  # Connects to server
             try:
-                while True:
-                    performTCP()
+                threadPerform.start()
+                try:
+                    threadRaport.start()
+                except:
+                    print('Error with creating and sending daily raport')
+                    MailExchanging.sendMail(MailExchanging.MailVariables.subRaportError,
+                                            MailExchanging.MailVariables.textRaportError)
+                try:
+                    threadDeleting.start()
+                except:
+                    print('Error with deleting year-time spools')
+                    MailExchanging.sendMail(MailExchanging.MailVariables.subDeletingError,
+                                            MailExchanging.MailVariables.textDeletingError)
+                for t in threads:
+                    t.join()
             except KeyboardInterrupt:
                 print('Manual break by user')
                 MailExchanging.sendMail(MailExchanging.MailVariables.subKeyboardInterruptError,
@@ -130,18 +191,7 @@ def main():
         except TimeoutError:
             print('Connection declined! Trying again in 30 seconds.')
             #    MailExchanging.sendMail(MailExchanging.MailVariables.subConnectionError, MailExchanging.MailVariables.textConnectionError)
-            thSleep30 = threading.Thread(target=Multithreading().doSleep, args=(30,)).start()
-        try:
-            thRaport = threading.Thread(target=Multithreading().dailyRaport).start()
-        except:
-            print('Error with creating and sending daily raport')
-            MailExchanging.sendMail(MailExchanging.MailVariables.subRaportError, MailExchanging.MailVariables.textRaportError)
-        try:
-            thDelete = threading.Thread(target=Multithreading().deleteSpool).start()
-        except:
-            print('Error with deleting year-time spools')
-            MailExchanging.sendMail(MailExchanging.MailVariables.subDeletingError, MailExchanging.MailVariables.textDeletingError)
-
+            threadSleep30.start()
 
 #       -----  MAIN FUNCTION CALL ------
 if __name__ == '__main__':

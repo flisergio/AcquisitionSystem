@@ -10,6 +10,7 @@ from other apps.
 
 import smtplib  # Imports smtplib module for mail communication
 
+
 #       -----  GLOBAL VARIABLES NEEDED FOR MAIL COMMUNICATION  ------
 class MailVariables:
     subFileSavingError = 'Error with saving CSV file '
@@ -55,7 +56,7 @@ class MailVariables:
 
 #       -----  EXECUTES MAIL COMMUNICATION  ------
 def sendMail(subject, text):
-    recMails = ['maciejjakubek@gmail.com','sergey.dko@gmail.com']
+    recMails = ['sergey.dko@gmail.com']
     server = smtplib.SMTP('smtp.mora-solutions.com', 587)
     server.ehlo()
     server.starttls()
