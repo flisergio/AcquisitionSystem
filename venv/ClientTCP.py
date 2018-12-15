@@ -1,63 +1,68 @@
 #       -----  GLOBAL IMPORTS ------
-import virtualenv   # Imports virtual environment
-import sys  # Imports sys module for system operations
 import datetime  # Imports datetime module for getting date and time
-import time  # Imports time module for operations with time
 import socket  # Imports socket module
+import sys  # Imports sys module for system operations
 import threading  # Imports threading module for threading
+import time  # Imports time module for operations with time
 
 #       -----  IMPORTS FROM PROJECT ------
 import CSVExchanging
 import MailExchanging
+import virtualenv  # Imports virtual environment
 
 #       -----  GLOBAL VARIABLES NEEDED FOR TCP ------
 s = socket.socket()  # Creates a socket object
 host = '192.168.8.201'  # Ip address of TCP server
 port = 61470  # Reserves a port
 
+
 #       -----  CLASS FOR THREADING ------
 class myThread(threading.Thread):
-   def __init__(self, name, times):
-      threading.Thread.__init__(self)
-      self.name = name
-      self.times = times
+    def __init__(self, name, times):
+        threading.Thread.__init__(self)
+        self.name = name
+        self.times = times
 
-   def run(self):
-       if self.name == "ThreadPerform":
-           #print('Starting ' + self.name)
-           runPerform()
-           #print('Finished ' + self.name)
-       if self.name == "ThreadRaport":
-           #print('Starting ' + self.name)
-           threadLock.acquire()
-           runRaport()
-           threadLock.release()
-           #print('Finished ' + self.name)
-       if self.name == "ThreadDeleting":
-           #print('Starting ' + self.name)
-           threadLock.acquire()
-           runDeleting()
-           threadLock.release()
-           #print('Finished ' + self.name)
-       if self.name.startswith("ThreadSleep"):
-           #print('Starting ' + self.name)
-           doSleep(int(self.times))
-           #print('Finished ' + self.name)
+    def run(self):
+        if self.name == "ThreadPerform":
+            # print('Starting ' + self.name)
+            runPerform()
+            # print('Finished ' + self.name)
+        if self.name == "ThreadRaport":
+            # print('Starting ' + self.name)
+            threadLock.acquire()
+            runRaport()
+            threadLock.release()
+            # print('Finished ' + self.name)
+        if self.name == "ThreadDeleting":
+            # print('Starting ' + self.name)
+            threadLock.acquire()
+            runDeleting()
+            threadLock.release()
+            # print('Finished ' + self.name)
+        if self.name.startswith("ThreadSleep"):
+            # print('Starting ' + self.name)
+            doSleep(int(self.times))
+            # print('Finished ' + self.name)
+
 
 #       -----  FUNCTIONS FOR THREADING ------
 def doSleep(x):
     time.sleep(x)
 
+
 def runPerform():
     while True:
         performTCP()
-        #time.sleep(1)
+        # time.sleep(1)
+
 
 def runRaport():
     while True:
         if datetime.datetime.now().strftime('%X') == '00:00:00':
             CSVExchanging.sendDailyRaport()
             break
+
 
 def runDeleting():
     while True:
@@ -77,13 +82,13 @@ threadDeleting = myThread("ThreadDeleting", None)
 threadSleep5 = myThread("ThreadSleep5", 5)
 threadSleep30 = myThread("ThreadSleep30", 30)
 
-
 #       -----  ADDING THREADS TO THREADS LIST ------
 threads.append(threadPerform)
 threads.append(threadRaport)
 threads.append(threadDeleting)
 threads.append(threadSleep5)
 threads.append(threadSleep30)
+
 
 #       -----  EXCHANGES CSV FILES WITH SERVER  ------
 def performTCP():
@@ -132,7 +137,8 @@ def performTCP():
                             toSend = 'PSQLTrouble!'
                             s.send(toSend.encode())
                             print(toSend)
-                            MailExchanging.sendMail(MailExchanging.MailVariables.subDatabaseError, MailExchanging.MailVariables.textDatabaseError)
+                            MailExchanging.sendMail(MailExchanging.MailVariables.subDatabaseError,
+                                                    MailExchanging.MailVariables.textDatabaseError)
                     except:
                         toSend = 'SaveTrouble!'
                         s.send(toSend.encode())
@@ -153,13 +159,15 @@ def performTCP():
                 data = ''
             except OSError:
                 print('Receiving data disallowed! Socket is probably not connected and no address was supplied.')
-                MailExchanging.sendMail(MailExchanging.MailVariables.subDataReceivingError, MailExchanging.MailVariables.textDataReceivingError)
+                MailExchanging.sendMail(MailExchanging.MailVariables.subDataReceivingError,
+                                        MailExchanging.MailVariables.textDataReceivingError)
                 threadSleep5.start()
     except KeyboardInterrupt:
         print('Manual break by user!')
         s.close()
         print('Connection closed!')
-        MailExchanging.sendMail(MailExchanging.MailVariables.subKeyboardInterruptError, MailExchanging.MailVariables.textKeyboardInterruptError)
+        MailExchanging.sendMail(MailExchanging.MailVariables.subKeyboardInterruptError,
+                                MailExchanging.MailVariables.textKeyboardInterruptError)
 
 
 #       -----  MAIN FUNCTION ------
@@ -192,6 +200,7 @@ def main():
             print('Connection declined! Trying again in 30 seconds.')
             #    MailExchanging.sendMail(MailExchanging.MailVariables.subConnectionError, MailExchanging.MailVariables.textConnectionError)
             threadSleep30.start()
+
 
 #       -----  MAIN FUNCTION CALL ------
 if __name__ == '__main__':
