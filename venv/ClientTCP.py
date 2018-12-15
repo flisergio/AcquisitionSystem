@@ -21,8 +21,15 @@ class Multithreading:
     #  ----- FOR DAILY RAPORT -----
     def dailyRaport(self):
         while True:
-            if (datetime.datetime.now().strftime('%X') == '00:00:00'):
+            if datetime.datetime.now().strftime('%X') == '00:00:00':
                 CSVExchanging.sendDailyRaport()
+                break
+
+    #  ----- FOR DELETING SPOOLS -----
+    def deleteSpool(self):
+        while True:
+            if datetime.datetime.now().strftime('%X') == '00:00:00':
+                CSVExchanging.deleteSpool()
                 break
 
     #  ----- FOR SLEEPING FUNCTIONS -----
@@ -129,6 +136,11 @@ def main():
         except:
             print('Error with creating and sending daily raport')
             MailExchanging.sendMail(MailExchanging.MailVariables.subRaportError, MailExchanging.MailVariables.textRaportError)
+        try:
+            thDelete = threading.Thread(target=Multithreading().deleteSpool).start()
+        except:
+            print('Error with deleting year-time spools')
+            MailExchanging.sendMail(MailExchanging.MailVariables.subDeletingError, MailExchanging.MailVariables.textDeletingError)
 
 
 #       -----  MAIN FUNCTION CALL ------

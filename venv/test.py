@@ -1,19 +1,20 @@
 import csv  # Imports csv module for working with CSV files
 import datetime  # Imports datetime module for getting date and time
 import hashlib  # Imports module for hashing
+import multiprocessing
+import os
 import os.path  # Imports module for pathing
 import sys  # Imports sys module for system operations
-import time  # Imports time module for operations with time
-import schedule    # Imports schedule module for scheduling
-import multiprocessing
 import threading
-import os
+import time  # Imports time module for operations with time
 
 #       -----  IMPORTS FROM PROJECT ------
 import CSVExchanging
 import MailExchanging
 import psycopg2
+import schedule  # Imports schedule module for scheduling
 import virtualenv
+
 
 #  ----- CLASS FOR MULTITHREADING -----
 class Multithreading:
@@ -23,6 +24,10 @@ class Multithreading:
             if datetime.datetime.now().strftime('%X') == '12:24:00':
                 sendDailyRaport()
                 break
+
+    #  ----- FOR DELETING SPOOLS -----
+    def deleteSpool(self):
+        print()
 
     #  ----- FOR SLEEPING FUNCTIONS -----
     def doSleep(self, x):
@@ -34,6 +39,7 @@ class Multithreading:
             time.sleep(1)
         """
         print('Sleep finished!')
+
 
 #       -----  SAVES INFORMATION ABOUT SPOOL IN DATABASE ------
 def saveDB(filename):
@@ -103,8 +109,8 @@ def sendDailyRaport():
 
     # generationDate = (str(dateTime).split(' '))[0]
     dateDayBeforeBadFormat = (datetime.datetime.now() - datetime.timedelta(hours=24))
-    dateForMail = (dateDayBeforeBadFormat.strftime("%d.%m.%Y"))
-    dateTimeDayBefore = (dateDayBeforeBadFormat.strftime("%Y-%m-%d"))
+    dateDayBeforeForMail = (dateDayBeforeBadFormat.strftime("%d.%m.%Y"))
+    dateDayBefore = (dateDayBeforeBadFormat.strftime("%Y-%m-%d"))
     # print(dateTimeDayBefore)
     # print(dateForMail)
 
@@ -113,15 +119,15 @@ def sendDailyRaport():
     materialForMail = ''
     colorForMail = ''
 
-    queryForTotalNumber = 'SELECT COUNT(*) FROM spool WHERE date BETWEEN \'' + dateTimeDayBefore + \
-                          ' 00:00:00\' AND \'' + dateTimeDayBefore + ' 23:59:59\';'
+    queryForTotalNumber = 'SELECT COUNT(*) FROM spool WHERE date BETWEEN \'' + dateDayBefore + \
+                          ' 00:00:00\' AND \'' + dateDayBefore + ' 23:59:59\';'
     # print(queryForTotalNumber)
     cur.execute(queryForTotalNumber)
     numOfSpools = cur.fetchone()[0]
     # print(numOfSpools)
 
-    queryForDiameterValues = 'SELECT DISTINCT diameter FROM spool WHERE date BETWEEN \'' + dateTimeDayBefore + \
-                             ' 00:00:00\' AND \'' + dateTimeDayBefore + ' 23:59:59\' ORDER BY diameter;'
+    queryForDiameterValues = 'SELECT DISTINCT diameter FROM spool WHERE date BETWEEN \'' + dateDayBefore + \
+                             ' 00:00:00\' AND \'' + dateDayBefore + ' 23:59:59\' ORDER BY diameter;'
     # print(queryForDiameterValues)
     cur.execute(queryForDiameterValues)
     valOfSpoolDiameter = cur.fetchall()
@@ -129,7 +135,7 @@ def sendDailyRaport():
     for value in valOfSpoolDiameter:
         queryForSameValuesNumber = 'SELECT COUNT(*) FROM spool WHERE diameter = \'' + str(value)[
                                                                                       1:-2] + '\' AND date BETWEEN \'' + \
-                                   dateTimeDayBefore + ' 00:00:00\' AND \'' + dateTimeDayBefore + ' 23:59:59\''
+                                   dateDayBefore + ' 00:00:00\' AND \'' + dateDayBefore + ' 23:59:59\''
         # print(queryForSameValuesNumber)
         cur.execute(queryForSameValuesNumber)
         numWithSpoolDiameter = cur.fetchone()[0]
@@ -137,8 +143,8 @@ def sendDailyRaport():
         diameterForMail = diameterForMail + diameterSubtext + '\n'
         # print('For ' + str(value)[1:-2] + ': ' + str(numWithSpoolDiameter))
 
-    queryForMassValues = 'SELECT DISTINCT mass FROM spool WHERE date BETWEEN \'' + dateTimeDayBefore + \
-                         ' 00:00:00\' AND \'' + dateTimeDayBefore + ' 23:59:59\' ORDER BY mass;'
+    queryForMassValues = 'SELECT DISTINCT mass FROM spool WHERE date BETWEEN \'' + dateDayBefore + \
+                         ' 00:00:00\' AND \'' + dateDayBefore + ' 23:59:59\' ORDER BY mass;'
     # print(queryForDiameterValues)
     cur.execute(queryForMassValues)
     valOfSpoolMass = cur.fetchall()
@@ -146,7 +152,7 @@ def sendDailyRaport():
     for value in valOfSpoolMass:
         queryForSameValuesNumber = 'SELECT COUNT(*) FROM spool WHERE mass = \'' + str(value)[
                                                                                   1:-2] + '\' AND date BETWEEN \'' + \
-                                   dateTimeDayBefore + ' 00:00:00\' AND \'' + dateTimeDayBefore + ' 23:59:59\''
+                                   dateDayBefore + ' 00:00:00\' AND \'' + dateDayBefore + ' 23:59:59\''
         # print(queryForSameValuesNumber)
         cur.execute(queryForSameValuesNumber)
         numWithSpoolMass = cur.fetchone()[0]
@@ -154,8 +160,8 @@ def sendDailyRaport():
         massForMail = massForMail + massSubtext + '\n'
         # print('For ' + str(value)[1:-2] + ': ' + str(numWithSpoolMass))
 
-    queryForMaterialValues = 'SELECT DISTINCT material FROM spool WHERE date BETWEEN \'' + dateTimeDayBefore + \
-                             ' 00:00:00\' AND \'' + dateTimeDayBefore + ' 23:59:59\' ORDER BY material;'
+    queryForMaterialValues = 'SELECT DISTINCT material FROM spool WHERE date BETWEEN \'' + dateDayBefore + \
+                             ' 00:00:00\' AND \'' + dateDayBefore + ' 23:59:59\' ORDER BY material;'
     # print(queryForDiameterValues)
     cur.execute(queryForMaterialValues)
     valOfSpoolMaterial = cur.fetchall()
@@ -163,7 +169,7 @@ def sendDailyRaport():
     for value in valOfSpoolMaterial:
         queryForSameValuesNumber = 'SELECT COUNT(*) FROM spool WHERE material = ' + str(value)[
                                                                                     1:-2] + ' AND date BETWEEN \'' + \
-                                   dateTimeDayBefore + ' 00:00:00\' AND \'' + dateTimeDayBefore + ' 23:59:59\''
+                                   dateDayBefore + ' 00:00:00\' AND \'' + dateDayBefore + ' 23:59:59\''
         # print(queryForSameValuesNumber)
         cur.execute(queryForSameValuesNumber)
         numWithSpoolMaterial = cur.fetchone()[0]
@@ -171,8 +177,8 @@ def sendDailyRaport():
         materialForMail = materialForMail + materialSubtext + '\n'
         # print('For ' + str(value)[1:-2] + ': ' + str(numWithSpoolMaterial))
 
-    queryForColorValues = 'SELECT DISTINCT ColorName FROM spool WHERE date BETWEEN \'' + dateTimeDayBefore + \
-                          ' 00:00:00\' AND \'' + dateTimeDayBefore + ' 23:59:59\' ORDER BY ColorName;'
+    queryForColorValues = 'SELECT DISTINCT ColorName FROM spool WHERE date BETWEEN \'' + dateDayBefore + \
+                          ' 00:00:00\' AND \'' + dateDayBefore + ' 23:59:59\' ORDER BY ColorName;'
     # print(queryForDiameterValues)
     cur.execute(queryForColorValues)
     valOfSpoolColor = cur.fetchall()
@@ -180,7 +186,7 @@ def sendDailyRaport():
     for value in valOfSpoolColor:
         queryForSameValuesNumber = 'SELECT COUNT(*) FROM spool WHERE ColorName = ' + str(value)[
                                                                                      1:-2] + ' AND date BETWEEN \'' + \
-                                   dateTimeDayBefore + ' 00:00:00\' AND \'' + dateTimeDayBefore + ' 23:59:59\''
+                                   dateDayBefore + ' 00:00:00\' AND \'' + dateDayBefore + ' 23:59:59\''
         # print(queryForSameValuesNumber)
         cur.execute(queryForSameValuesNumber)
         numWithSpoolColor = cur.fetchone()[0]
@@ -190,7 +196,7 @@ def sendDailyRaport():
 
     CSVExchanging.connectDB().close()
 
-    mailSubject = 'Spool production raport for ' + dateForMail
+    mailSubject = 'Spool production raport for ' + dateDayBeforeForMail
     if numOfSpools > 0:
         mailText = 'Total spools produced: ' + str(numOfSpools) + '\n\n' + \
                    ' \t\t\t----- Diameter value: number of spools with this diameter ----- \n' + diameterForMail + '\n' + \
@@ -202,13 +208,36 @@ def sendDailyRaport():
     MailExchanging.sendMail(mailSubject, mailText)
 
 
+def deleteSpool():
+    cur = CSVExchanging.connectDB().cursor()
+
+    # currentDate = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    dateTimeYearBeforeBadFormat = (datetime.datetime.now() - datetime.timedelta(days=366))
+    dateYearBeforeForMail = (dateTimeYearBeforeBadFormat.strftime("%d.%m.%Y"))
+    dateTimeYearBeforeStart = (dateTimeYearBeforeBadFormat.strftime("%Y-%m-%d") + ' 00:00:00')
+    # print(dateTimeYearBeforeStart)
+    dateTimeYearBeforeEnd = (dateTimeYearBeforeBadFormat.strftime("%Y-%m-%d") + ' 23:59:59')
+    # print(dateTimeYearBeforeEnd)
+
+    queryDelete = 'DELETE FROM spool WHERE date = (SELECT date FROM spool WHERE date BETWEEN \'' + \
+                  dateTimeYearBeforeStart + '\' AND \'' + dateTimeYearBeforeEnd + '\');'
+    # print(queryDelete)
+    cur.execute(queryDelete)
+
+    CSVExchanging.connectDB().close()
+
+    mailSubject = 'Deleted all spools produced ' + dateYearBeforeForMail
+    mailText = 'Spools that were produced ' + dateYearBeforeForMail + ' were deleted from database!'
+    MailExchanging.sendMail(mailSubject, mailText)
+
+
 #       -----  MAIN FUNCTION ------
 def main():
-    #saveDB('107')
-    #sendDailyRaport()
-
-    thRaport = threading.Thread(target=Multithreading().dailyRaport).start()
-    thSleep60 = threading.Thread(target=Multithreading().doSleep, args=(60,)).start()
+    # saveDB('107')
+    # sendDailyRaport()
+    deleteSpool()
+    # thRaport = threading.Thread(target=Multithreading().dailyRaport).start()
+    # thSleep60 = threading.Thread(target=Multithreading().doSleep, args=(60,)).start()
 
 
 #       -----  MAIN FUNCTION CALL ------

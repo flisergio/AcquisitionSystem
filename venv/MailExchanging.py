@@ -37,6 +37,9 @@ class MailVariables:
     subRaportError = 'Error with creating and sending daily raport'
     textRaportError = 'Daily raport hasn\'t been sent! Error exists.'
 
+    subDeletingError = 'Error with deleting year-time spools'
+    textDeletingError = 'Spools produced year ago haven\'t been deleted! Error exists.'
+
     subFileAppendingError = 'Unexpected error with appending'
     textFileAppendingError = 'Unexpected error appeared while tried to append next CSV file.'
 

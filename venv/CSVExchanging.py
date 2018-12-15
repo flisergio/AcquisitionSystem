@@ -237,3 +237,22 @@ def sendDailyRaport():
     else:
         mailText = 'Total spools produced: ' + str(numOfSpools) + '\n\n' + 'No spools produced this day!'
     MailExchanging.sendMail(mailSubject, mailText)
+
+def deleteSpool():
+    cur = connectDB().cursor()
+
+    dateTimeYearBeforeBadFormat = (datetime.datetime.now() - datetime.timedelta(days=366))
+    dateYearBeforeForMail = (dateYearBeforeBadFormat.strftime("%d.%m.%Y"))
+    dateTimeYearBeforeStart = (dateTimeYearBeforeBadFormat.strftime("%Y-%m-%d") + ' 00:00:00')
+    dateTimeYearBeforeEnd = (dateTimeYearBeforeBadFormat.strftime("%Y-%m-%d") + ' 23:59:59')
+
+    queryDelete = 'DELETE FROM spool WHERE date = (SELECT date FROM spool WHERE date BETWEEN \'' + \
+                           dateTimeYearBeforeStart + '\' AND \'' + dateTimeYearBeforeEnd + '\');'
+    cur.execute(queryDelete)
+
+    connectDB().close()
+
+    mailSubject = 'Deleted all spools produced ' + dateYearBeforeForMail
+    mailText = 'Spools that were produced ' + dateYearBeforeForMail + ' were deleted from database!'
+    MailExchanging.sendMail(mailSubject, mailText)
+
