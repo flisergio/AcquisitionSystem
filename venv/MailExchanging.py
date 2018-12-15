@@ -7,7 +7,7 @@ Few steps to make it work:
 from other apps.
 * After this run the code *
 """
-
+#       -----  GLOBAL IMPORTS ------
 import smtplib  # Imports smtplib module for mail communication
 
 

@@ -1,15 +1,16 @@
+#       -----  GLOBAL IMPORTS ------
+import virtualenv   # Imports virtual environment
+import sys  # Imports sys module for system operations
+import os.path  # Imports module for pathing
 import csv  # Imports csv module for working with CSV files
 import datetime  # Imports datetime module for getting date and time
-import hashlib  # Imports module for hashing
-import os.path  # Imports module for pathing
-import sys  # Imports sys module for system operations
 import time  # Imports time module for operations with time
+import hashlib  # Imports module for hashing
+import psycopg2    # Imports psycopg2 module for communication with PostgreSQL
 
 #       -----  IMPORTS FROM PROJECT ------
 import ClientTCP
 import MailExchanging
-import psycopg2
-import virtualenv
 
 #       -----  GLOBAL VARIABLES NEEDED FOR FILE FINDING  ------
 pathClient = 'C:\\Users\\fliesrgio\\Downloads\\'

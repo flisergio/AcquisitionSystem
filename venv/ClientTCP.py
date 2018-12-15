@@ -1,14 +1,14 @@
-import datetime  # Imports datetime module for getting date and time
-import socket  # Imports socket module
+#       -----  GLOBAL IMPORTS ------
+import virtualenv   # Imports virtual environment
 import sys  # Imports sys module for system operations
-import threading  # Imports threading module for threading
+import datetime  # Imports datetime module for getting date and time
 import time  # Imports time module for operations with time
+import socket  # Imports socket module
+import threading  # Imports threading module for threading
 
 #       -----  IMPORTS FROM PROJECT ------
 import CSVExchanging
 import MailExchanging
-import schedule  # Imports schedule module for scheduling
-import virtualenv
 
 #       -----  GLOBAL VARIABLES NEEDED FOR TCP ------
 s = socket.socket()  # Creates a socket object
