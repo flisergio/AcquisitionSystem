@@ -5,9 +5,10 @@ import os.path  # Imports module for pathing
 import sys  # Imports sys module for system operations
 import time  # Imports time module for operations with time
 
+#       -----  IMPORTS FROM PROJECT ------
+import ClientTCP
 import MailExchanging
 import psycopg2
-#       -----  IMPORTS FROM PROJECT ------
 import virtualenv
 
 #       -----  GLOBAL VARIABLES NEEDED FOR FILE FINDING  ------
@@ -44,7 +45,7 @@ def readCSV(filename):
     pathCSV = pathClient + filename + str('.csv')
 
     while not os.path.exists(pathCSV):
-        time.sleep(5)
+        thSleep5 = threading.Thread(target=ClientTCP.Multithreading().doSleep, args=(5,)).start()
     if os.path.isfile(pathCSV):
         try:
             with open(pathCSV, 'r') as csv_file_r:
@@ -147,7 +148,7 @@ def saveToDatabase(filename):
 
 
 def sendDailyRaport():
-    cur = CSVExchanging.connectDB().cursor()
+    cur = connectDB().cursor()
 
     dateDayBeforeBadFormat = (datetime.datetime.now() - datetime.timedelta(hours=24))
     dateForMail = (dateDayBeforeBadFormat.strftime("%d.%m.%Y"))
@@ -224,12 +225,15 @@ def sendDailyRaport():
         colorSubtext = 'With color ' + str(value)[1:-2] + ': ' + str(numWithSpoolColor)
         colorForMail = colorForMail + colorSubtext + '\n'
 
-    CSVExchanging.connectDB().close()
+    connectDB().close()
 
     mailSubject = 'Spool production raport for ' + dateForMail
-    mailText = 'Total spools produced: ' + str(numOfSpools) + '\n\n' + \
-               ' \t\t\t----- Diameter value: number of spools with this diameter ----- \n' + diameterForMail + '\n' + \
-               ' \t\t\t----- Mass value: number of spools with this mass ----- \n' + massForMail + '\n' + \
-               ' \t\t\t----- Material value: number of spools with this material ----- \n' + materialForMail + '\n' + \
-               ' \t\t\t----- Color value: number of spools with this color ----- \n' + colorForMail + '\n'
+    if numOfSpools > 0:
+        mailText = 'Total spools produced: ' + str(numOfSpools) + '\n\n' + \
+                   ' \t\t\t----- Diameter value: number of spools with this diameter ----- \n' + diameterForMail + '\n' + \
+                   ' \t\t\t----- Mass value: number of spools with this mass ----- \n' + massForMail + '\n' + \
+                   ' \t\t\t----- Material value: number of spools with this material ----- \n' + materialForMail + '\n' + \
+                   ' \t\t\t----- Color value: number of spools with this color ----- \n' + colorForMail + '\n'
+    else:
+        mailText = 'Total spools produced: ' + str(numOfSpools) + '\n\n' + 'No spools produced this day!'
     MailExchanging.sendMail(mailSubject, mailText)

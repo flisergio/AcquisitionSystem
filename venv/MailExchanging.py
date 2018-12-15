@@ -33,6 +33,9 @@ textDataHashingError = 'Unexpected error appeared while tried to hash name of fi
 subDatabaseError = 'Error with writing to database'
 textDatabaseError = 'Error appeared with writing to database.'
 
+subRaportError = 'Error with creating and sending daily raport'
+textRaportError = 'Daily raport hasn\'t been sent! Error exists.'
+
 subFileAppendingError = 'Unexpected error with appending'
 textFileAppendingError = 'Unexpected error appeared while tried to append next CSV file.'
 
@@ -48,7 +51,7 @@ myPass = '!koMORA1'
 #       -----  EXECUTES MAIL COMMUNICATION  ------
 def sendMail(subject, text):
     myMail = 'acqsys@mora-solutions.com'
-    recMails = ['sergey.dko@gmail.com']
+    recMails = ['maciejjakubek@gmail.com','sergey.dko@gmail.com']
     server = smtplib.SMTP('smtp.mora-solutions.com', 587)
     server.ehlo()
     server.starttls()

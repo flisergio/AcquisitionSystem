@@ -1,17 +1,33 @@
+import datetime  # Imports datetime module for getting date and time
 import socket  # Imports socket module
 import sys  # Imports sys module for system operations
+import threading  # Imports threading module for threading
 import time  # Imports time module for operations with time
-import datetime   # Imports datetime module for getting date and time
 
+#       -----  IMPORTS FROM PROJECT ------
 import CSVExchanging
 import MailExchanging
-#       -----  IMPORTS FROM PROJECT ------
+import schedule  # Imports schedule module for scheduling
 import virtualenv
 
 #       -----  GLOBAL VARIABLES NEEDED FOR TCP ------
 s = socket.socket()  # Creates a socket object
 host = '192.168.8.201'  # Ip address of TCP server
 port = 61470  # Reserves a port
+
+
+#  ----- CLASS FOR MULTITHREADING -----
+class Multithreading:
+    #  ----- FOR DAILY RAPORT -----
+    def dailyRaport(self):
+        while True:
+            if (datetime.datetime.now().strftime('%X') == '00:00:00'):
+                CSVExchanging.sendDailyRaport()
+                break
+
+    #  ----- FOR SLEEPING FUNCTIONS -----
+    def doSleep(self, x):
+        time.sleep(x)
 
 
 #       -----  EXCHANGES CSV FILES WITH SERVER  ------
@@ -31,7 +47,7 @@ def performTCP():
                     print(toSend)
                 elif data == 'Wait':  # If data is "Wait" client sleeps for 5 sec
                     print(data)
-                    time.sleep(5)
+                    thSleep5 = threading.Thread(target=Multithreading().doSleep, args=(5,)).start()
                 elif (data.startswith(
                         'ToGo')):  # If data is "ToGo..." client sends "Ready,0" to server and starts waiting for packets
                     toSend = 'ReadyToWrite'
@@ -83,7 +99,7 @@ def performTCP():
             except OSError:
                 print('Receiving data disallowed! Socket is probably not connected and no address was supplied.')
                 MailExchanging.sendMail(MailExchanging.subDataReceivingError, MailExchanging.textDataReceivingError)
-                time.sleep(5)
+                thSleep5 = threading.Thread(target=Multithreading().doSleep, args=(5,)).start()
     except KeyboardInterrupt:
         print('Manual break by user!')
         s.close()
@@ -106,11 +122,13 @@ def main():
                 break
         except TimeoutError:
             print('Connection declined! Trying again in 30 seconds.')
-            #    MailExchanging.sendMail(subConnectionError, textConnectionError)
-            time.sleep(30)
-
-    if(datetime.datetime.now().time().strftime('%H:%M:%S') == '00:00:00'):
-        CSVExchanging.sendDailyReport()
+            #    MailExchanging.sendMail(MailExchanging.subConnectionError, MailExchanging.textConnectionError)
+            thSleep30 = threading.Thread(target=Multithreading().doSleep, args=(30,)).start()
+        try:
+            thRaport = threading.Thread(target=Multithreading().dailyRaport).start()
+        except:
+            print('Error with creating and sending daily raport')
+            MailExchanging.sendMail(MailExchanging.subRaportError, MailExchanging.textRaportError)
 
 
 #       -----  MAIN FUNCTION CALL ------

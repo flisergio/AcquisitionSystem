@@ -4,13 +4,36 @@ import hashlib  # Imports module for hashing
 import os.path  # Imports module for pathing
 import sys  # Imports sys module for system operations
 import time  # Imports time module for operations with time
+import schedule    # Imports schedule module for scheduling
+import multiprocessing
+import threading
+import os
 
+#       -----  IMPORTS FROM PROJECT ------
 import CSVExchanging
 import MailExchanging
 import psycopg2
-#       -----  IMPORTS FROM PROJECT ------
 import virtualenv
 
+#  ----- CLASS FOR MULTITHREADING -----
+class Multithreading:
+    #  ----- FOR DAILY RAPORT -----
+    def dailyRaport(self):
+        while True:
+            if datetime.datetime.now().strftime('%X') == '12:24:00':
+                sendDailyRaport()
+                break
+
+    #  ----- FOR SLEEPING FUNCTIONS -----
+    def doSleep(self, x):
+        print('Sleeping for ' + str(x) + ' seconds . . .')
+        time.sleep(x)
+        """
+        for i in range(1, (x + 1)):
+            print(str(i) + ' . . .')
+            time.sleep(1)
+        """
+        print('Sleep finished!')
 
 #       -----  SAVES INFORMATION ABOUT SPOOL IN DATABASE ------
 def saveDB(filename):
@@ -168,18 +191,24 @@ def sendDailyRaport():
     CSVExchanging.connectDB().close()
 
     mailSubject = 'Spool production raport for ' + dateForMail
-    mailText = 'Total spools produced: ' + str(numOfSpools) + '\n\n' + \
-               ' \t\t\t----- Diameter value: number of spools with this diameter ----- \n' + diameterForMail + '\n' + \
-               ' \t\t\t----- Mass value: number of spools with this mass ----- \n' + massForMail + '\n' + \
-               ' \t\t\t----- Material value: number of spools with this material ----- \n' + materialForMail + '\n' + \
-               ' \t\t\t----- Color value: number of spools with this color ----- \n' + colorForMail + '\n'
+    if numOfSpools > 0:
+        mailText = 'Total spools produced: ' + str(numOfSpools) + '\n\n' + \
+                   ' \t\t\t----- Diameter value: number of spools with this diameter ----- \n' + diameterForMail + '\n' + \
+                   ' \t\t\t----- Mass value: number of spools with this mass ----- \n' + massForMail + '\n' + \
+                   ' \t\t\t----- Material value: number of spools with this material ----- \n' + materialForMail + '\n' + \
+                   ' \t\t\t----- Color value: number of spools with this color ----- \n' + colorForMail + '\n'
+    else:
+        mailText = 'Total spools produced: ' + str(numOfSpools) + '\n\n' + 'No spools produced this day!'
     MailExchanging.sendMail(mailSubject, mailText)
 
 
 #       -----  MAIN FUNCTION ------
 def main():
-    # saveDB('107')
-    sendDailyRaport()
+    #saveDB('107')
+    #sendDailyRaport()
+
+    thRaport = threading.Thread(target=Multithreading().dailyRaport).start()
+    thSleep60 = threading.Thread(target=Multithreading().doSleep, args=(60,)).start()
 
 
 #       -----  MAIN FUNCTION CALL ------
