@@ -51,17 +51,17 @@ def doSleep(x):
 def runPerform():
     while True:
         performTCP()
-        time.sleep(1)
+        #time.sleep(1)
 
 def runRaport():
     while True:
-        if datetime.datetime.now().strftime('%X') == '20:13:30':
+        if datetime.datetime.now().strftime('%X') == '00:00:00':
             CSVExchanging.sendDailyRaport()
             break
 
 def runDeleting():
     while True:
-        if datetime.datetime.now().strftime('%X') == '20:13:30':
+        if datetime.datetime.now().strftime('%X') == '00:00:00':
             CSVExchanging.deleteSpool()
             break
 
