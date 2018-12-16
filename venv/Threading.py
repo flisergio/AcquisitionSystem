@@ -3,9 +3,9 @@ import datetime  # Imports datetime module for getting date and time
 import threading  # Imports threading module for threading
 import time  # Imports time module for operations with time
 
+import CSVExchanging
 #       -----  IMPORTS FROM PROJECT ------
 import ClientTCP
-import CSVExchanging
 
 
 #       -----  CLASS FOR THREADING ------
@@ -17,25 +17,21 @@ class myThread(threading.Thread):
 
     def run(self):
         if self.name == "ThreadPerform":
-            print('Starting ' + self.name)
+            print('Starting ' + self.name)  # For tests
             runPerform()
-            print('Finished ' + self.name)
+            print('Finished ' + self.name)  # For tests
         if self.name == "ThreadRaport":
-            print('Starting ' + self.name)
-            threadLock.acquire()
+            print('Starting ' + self.name)  # For tests
             runRaport()
-            threadLock.release()
-            print('Finished ' + self.name)
+            print('Finished ' + self.name)  # For tests
         if self.name == "ThreadDeleting":
-            print('Starting ' + self.name)
-            threadLock.acquire()
+            print('Starting ' + self.name)  # For tests
             runDeleting()
-            threadLock.release()
-            print('Finished ' + self.name)
+            print('Finished ' + self.name)  # For tests
         if self.name.startswith("ThreadSleep"):
-            print('Starting ' + self.name)
+            print('Starting ' + self.name)  # For tests
             doSleep(int(self.times))
-            print('Finished ' + self.name)
+            print('Finished ' + self.name)  # For tests
 
 
 #       -----  FUNCTIONS FOR THREADING ------
@@ -46,21 +42,23 @@ def doSleep(x):
 def runPerform():
     while True:
         # ClientTCP.performTCP()
+        #  ----- FOR TESTS: -----
+        print('Performing . . .')
         time.sleep(1)
 
 
 def runRaport():
     while True:
+        time.sleep(.5)
         if datetime.datetime.now().strftime('%X') == '00:00:00':
             CSVExchanging.sendDailyRaport()
-            break
 
 
 def runDeleting():
     while True:
+        time.sleep(.5)
         if datetime.datetime.now().strftime('%X') == '00:00:00':
             CSVExchanging.deleteSpool()
-            break
 
 
 #       -----  VARIABLES FOR THREADING ------
