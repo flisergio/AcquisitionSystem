@@ -50,22 +50,24 @@ class MailVariables:
     subConnectionError = 'Error with connection to server'
     textConnectionError = 'Connection declined! Trying again in 30 seconds.'
 
-    myMail = 'acqsys@mora-solutions.com'
-    myPass = '!koMORA1'
+    acqsysMail = 'acqsys@mora-solutions.com'
+    acqsysPass = '!koMORA1'
+
+    recMails = ['maciejjakubek@gmail.com', 'sergey.dko@gmail.com']
+    recMailsErrors = ['maciejjakubek@gmail.com', 'sergey.dko@gmail.com']
 
 
 #       -----  EXECUTES MAIL COMMUNICATION  ------
-def sendMail(subject, text):
-    recMails = ['sergey.dko@gmail.com']
+def sendMail(subject, text, mailsRecv):
     server = smtplib.SMTP('smtp.mora-solutions.com', 587)
     server.ehlo()
     server.starttls()
-    server.login(MailVariables.myMail, MailVariables.myPass)
-    for recMail in recMails:
-        body = '\r\n'.join(['To: %s' % recMail,
-                            'From: %s' % MailVariables.myMail,
+    server.login(MailVariables.acqsysMail, MailVariables.acqsysPass)
+    for mailTo in mailsRecv:
+        body = '\r\n'.join(['To: %s' % mailTo,
+                            'From: %s' % MailVariables.acqsysMail,
                             'Subject: %s' % subject,
                             '', text])
 
-        server.sendmail(MailVariables.myMail, [recMail], body)
+        server.sendmail(MailVariables.acqsysMail, [mailTo], body)
     print('Email successfully sent!')

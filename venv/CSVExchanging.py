@@ -1,16 +1,16 @@
 #       -----  GLOBAL IMPORTS ------
-import virtualenv   # Imports virtual environment
-import sys  # Imports sys module for system operations
-import os.path  # Imports module for pathing
 import csv  # Imports csv module for working with CSV files
 import datetime  # Imports datetime module for getting date and time
-import time  # Imports time module for operations with time
 import hashlib  # Imports module for hashing
-import psycopg2    # Imports psycopg2 module for communication with PostgreSQL
+import os.path  # Imports module for pathing
+import sys  # Imports sys module for system operations
+import time  # Imports time module for operations with time
 
 #       -----  IMPORTS FROM PROJECT ------
 import ClientTCP
 import MailExchanging
+import psycopg2  # Imports psycopg2 module for communication with PostgreSQL
+import virtualenv  # Imports virtual environment
 
 #       -----  GLOBAL VARIABLES NEEDED FOR FILE FINDING  ------
 pathClient = 'C:\\Users\\fliesrgio\\Downloads\\'
@@ -34,7 +34,8 @@ def saveCSV(filename, data):
     except IOError:
         print('Could not read file ' + filename + '! ' + longText)
         MailExchanging.sendMail(MailExchanging.MailVariables.subFileSavingError + filename,
-                                MailExchanging.MailVariables.textFileSavingError + filename + '.')
+                                MailExchanging.MailVariables.textFileSavingError + filename + '.',
+                                MailExchanging.MailVariables.recMailsErrors)
     except:
         print('Unexpected error:', sys.exc_info()[0])
         MailExchanging.sendMail(MailExchanging.MailVariables.subFileUnexpectedError + filename,
@@ -59,11 +60,13 @@ def readCSV(filename):
         except IOError:
             print('Could not read file ' + filename + '! ' + longText)
             MailExchanging.sendMail(MailExchanging.MailVariables.subFileReadingError + filename,
-                                    MailExchanging.MailVariables.textFileReadingError + filename + '.')
+                                    MailExchanging.MailVariables.textFileReadingError + filename + '.',
+                                    MailExchanging.MailVariables.recMailsErrors)
         except:
             print("Unexpected error:", sys.exc_info()[0])
             MailExchanging.sendMail(MailExchanging.MailVariables.subFileUnexpectedError + filename,
-                                    MailExchanging.MailVariables.textFileUnexpectedError + filename + '.')
+                                    MailExchanging.MailVariables.textFileUnexpectedError + filename + '.',
+                                    MailExchanging.MailVariables.recMailsErrors)
 
     else:
         raise ValueError("%s isn't a file!" % pathClient + filename)
@@ -74,7 +77,6 @@ def hashData(dataToHash):
     now = datetime.datetime.now()
     currentDate = now.strftime("%d.%m.%Y")
     newData = str(dataToHash) + '.' + currentDate
-    #print('Data to be hashed: ' + newData)
     hashObject = hashlib.md5(newData.encode())
     return hashObject.hexdigest()
 
@@ -104,7 +106,8 @@ def saveToDatabase(filename):
     nameOfFile = filename
     hashedName = hashData(filename)
 
-    next(csv_reader)
+    next(csv_reader)  # Skipping one line
+
     #  ----- READING GENERATION DATE FROM FILE -----  #
     dateLineSplit = str(next(csv_reader)).split(';')
     dateLineFirstElement = dateLineSplit[0].split('#')
@@ -115,7 +118,7 @@ def saveToDatabase(filename):
     generationTime = (dateBadFormatSplit[3])[:-1]
     generationDateTime = (generationDate + ' ' + generationTime)[:-3]
 
-    #  ----- SKIPPING UNNECESSARY LINES -----  #
+    #  ----- SKIPPING FOUR UNNECESSARY LINES -----  #
     next(csv_reader)
     next(csv_reader)
     next(csv_reader)
@@ -130,38 +133,29 @@ def saveToDatabase(filename):
             if attributeName == attribute:
                 print(line)
                 attributeValueSplit = str(attributeNameValueSplit[1])
-                #print(attributeValueSplit)
                 attributeValue = attributeValueSplit[1:-3]
-                #print(attributeValue)
                 if attributeValue == '999':
                     print('a')
-                    if attributes.index(attribute) == 0 or attributes.index(attribute) == 1 or attributes.index(attribute) == 2:
+                    if attributes.index(attribute) == 0 or attributes.index(attribute) == 1 or attributes.index(
+                            attribute) == 2:
                         values[attributes.index(attribute)] = '!!!'
                     else:
                         values[attributes.index(attribute)] = 999
-                    #attribute += 1
                     continue
                 else:
                     values[attributes.index(attribute)] = attributeValue
-    #print(values)  # For printing values list
     fileCSV.close()
 
     #  ----- INSERTING ATTRIBUTE VALUES IN DATABASE -----  #
-    query = 'INSERT INTO spool VALUES (\'' + str(hashedName) + '\', ' + str(nameOfFile) + ', \'' + str(generationDateTime) + '\', \'' + \
-            str(values[0]) + '\', \'' + str(values[1]) + '\', \'' + str(values[2]) + '\', ' + str(float(values[3])) + ', ' + str(float(values[4])) + ', ' + str(
-            values[5]) + ', ' + str(values[6]) + ', ' + str(values[7]) + ', ' + str(values[8]) + ', ' + str(values[9]) + ', \'' + pathClient + '\');'
-    #print(query)
-    """
-    print(hashedName + '\n' + nameOfFile + '\n' + generationDateTime + '\n' +
-          str(values[0]) + '\n' + str(values[1]) + '\n' + str(values[2]) + '\n' +
-          str(values[3]) + '\n' + str(values[4]) + '\n' + str(values[5]) + '\n' +
-          str(values[6]) + '\n' + str(values[7]) + '\n' + str(values[8]) + '\n' +
-          str(values[9]) + '\n' + pathClient + '\n')
-    """
+    query = 'INSERT INTO spool VALUES (\'' + str(hashedName) + '\', ' + str(nameOfFile) + ', \'' + str(
+        generationDateTime) + '\', \'' + \
+            str(values[0]) + '\', \'' + str(values[1]) + '\', \'' + str(values[2]) + '\', ' + str(
+        float(values[3])) + ', ' + str(float(values[4])) + ', ' + str(
+        values[5]) + ', ' + str(values[6]) + ', ' + str(values[7]) + ', ' + str(values[8]) + ', ' + str(
+        values[9]) + ', \'' + pathClient + '\');'
     cur = connectDB().cursor()
     cur.execute(query)
     connectDB().close()
-    # print(query)    # For printing result query
 
 
 def sendDailyRaport():
@@ -253,7 +247,8 @@ def sendDailyRaport():
                    ' \t\t\t----- Color value: number of spools with this color ----- \n' + colorForMail + '\n'
     else:
         mailText = 'Total spools produced: ' + str(numOfSpools) + '\n\n' + 'No spools produced this day!'
-    MailExchanging.sendMail(mailSubject, mailText)
+    MailExchanging.sendMail(mailSubject, mailText, MailExchanging.MailVariables.recMails)
+
 
 def deleteSpool():
     cur = connectDB().cursor()
@@ -264,12 +259,11 @@ def deleteSpool():
     dateTimeYearBeforeEnd = (dateTimeYearBeforeBadFormat.strftime("%Y-%m-%d") + ' 23:59:59')
 
     queryDelete = 'DELETE FROM spool WHERE date = (SELECT date FROM spool WHERE date BETWEEN \'' + \
-                           dateTimeYearBeforeStart + '\' AND \'' + dateTimeYearBeforeEnd + '\');'
+                  dateTimeYearBeforeStart + '\' AND \'' + dateTimeYearBeforeEnd + '\');'
     cur.execute(queryDelete)
 
     connectDB().close()
 
     mailSubject = 'Deleted all spools produced ' + dateYearBeforeForMail
     mailText = 'Spools that were produced ' + dateYearBeforeForMail + ' were deleted from database!'
-    MailExchanging.sendMail(mailSubject, mailText)
-
+    MailExchanging.sendMail(mailSubject, mailText, MailExchanging.MailVariables.recMails)
