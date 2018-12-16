@@ -2,28 +2,28 @@ import datetime
 import time
 
 import CSVExchanging
-import ClientTCP
 import MailExchanging
+import Threading
 
 try:
-    ClientTCP.threadPerform.start()
+    Threading.threadPerform.start()
     try:
-        ClientTCP.threadRaport.start()
-        ClientTCP.threadSleep5.start()
+        Threading.threadRaport.start()
+        Threading.threadSleep5.start()
     except:
         print('Error with creating and sending daily raport')
         MailExchanging.sendMail(MailExchanging.MailVariables.subRaportError,
                                 MailExchanging.MailVariables.textRaportError,
                                 MailExchanging.MailVariables.recMailsErrors)
     try:
-        ClientTCP.threadDeleting.start()
-        ClientTCP.threadSleep30.start()
+        Threading.threadDeleting.start()
+        Threading.threadSleep30.start()
     except:
         print('Error with deleting year-time spools')
         MailExchanging.sendMail(MailExchanging.MailVariables.subDeletingError,
                                 MailExchanging.MailVariables.textDeletingError,
                                 MailExchanging.MailVariables.recMailsErrors)
-    for t in ClientTCP.threads:
+    for t in Threading.threads:
         t.join()
 except KeyboardInterrupt:
     print('Manual break by user')

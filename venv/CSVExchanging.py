@@ -7,8 +7,8 @@ import sys  # Imports sys module for system operations
 import time  # Imports time module for operations with time
 
 #       -----  IMPORTS FROM PROJECT ------
-import ClientTCP
 import MailExchanging
+import Threading
 import psycopg2  # Imports psycopg2 module for communication with PostgreSQL
 import virtualenv  # Imports virtual environment
 
@@ -47,9 +47,7 @@ def readCSV(filename):
     pathCSV = pathClient + filename + str('.csv')
 
     while not os.path.exists(pathCSV):
-        threadSleep5 = ClientTCP.myThread("ThreadSleep5", 5)
-        ClientTCP.threads.append(threadSleep5)
-        threadSleep5.start()
+        Threading.threadSleep5.start()
     if os.path.isfile(pathCSV):
         try:
             with open(pathCSV, 'r') as csv_file_r:
