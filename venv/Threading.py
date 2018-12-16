@@ -3,9 +3,9 @@ import datetime  # Imports datetime module for getting date and time
 import threading  # Imports threading module for threading
 import time  # Imports time module for operations with time
 
-import CSVExchanging
 #       -----  IMPORTS FROM PROJECT ------
 import ClientTCP
+import CSVExchanging
 
 
 #       -----  CLASS FOR THREADING ------
