@@ -1,7 +1,10 @@
 #       -----  GLOBAL IMPORTS ------
+from __future__ import with_statement
+
 import datetime  # Imports datetime module for getting date and time
 import socket  # Imports socket module
 import sys  # Imports sys module for system operations
+import threading  # Imports threading module for threading
 import time  # Imports time module for operations with time
 
 #       -----  IMPORTS FROM PROJECT ------
@@ -33,7 +36,12 @@ def performTCP():
                     print(toSend)
                 elif data == 'Wait':  # If data is "Wait" client sleeps for 5 sec
                     print(data)
-                    Threading.threadSleep5.start()
+                    with Threading.threadLockSleep5:
+                        for t in Threading.threads5:
+                            t.join()
+                        threadSleep5 = Threading.myThread(4, "ThreadSleep5", 5)
+                        threadSleep5.start()
+                        Threading.threads5.append(threadSleep5)
                 elif (data.startswith(
                         'ToGo')):  # If data is "ToGo..." client starts waiting for packets
                     toSend = 'ReadyToWrite'
@@ -89,10 +97,15 @@ def performTCP():
                 #   data = ''
             except OSError:
                 print('Receiving data disallowed! Socket is probably not connected and no address was supplied.')
-                MailExchanging.sendMail(MailExchanging.MailVariables.subDataReceivingError,
-                                        MailExchanging.MailVariables.textDataReceivingError,
-                                        MailExchanging.MailVariables.recMailsErrors)
-                Threading.threadSleep5.start()
+                #   MailExchanging.sendMail(MailExchanging.MailVariables.subDataReceivingError,
+                #                       MailExchanging.MailVariables.textDataReceivingError,
+                #                        MailExchanging.MailVariables.recMailsErrors)
+                with Threading.threadLockSleep5:
+                    for t in Threading.threads5:
+                        t.join()
+                    threadSleep5 = Threading.myThread(4, "ThreadSleep5", 5)
+                    threadSleep5.start()
+                    Threading.threads5.append(threadSleep5)
     except KeyboardInterrupt:
         print('Manual break by user!')
         s.close()
@@ -107,36 +120,43 @@ def main():
     while True:
         try:
             s.connect((host, port))  # Connects to server
-            try:
-                Threading.threadPerform.start()
+            while True:
                 try:
-                    Threading.threadRaport.start()
-                except:
-                    print('Error with creating and sending daily raport')
-                    MailExchanging.sendMail(MailExchanging.MailVariables.subRaportError,
-                                            MailExchanging.MailVariables.textRaportError,
+                    if not Threading.threadPerform.is_alive():
+                        Threading.threadPerform.start()
+                    try:
+                        if not Threading.threadRaport.is_alive():
+                            Threading.threadRaport.start()
+                    except:
+                        print('Error with creating and sending daily raport')
+                        MailExchanging.sendMail(MailExchanging.MailVariables.subRaportError,
+                                                MailExchanging.MailVariables.textRaportError,
+                                                MailExchanging.MailVariables.recMailsErrors)
+                    try:
+                        if not Threading.threadDeleting.is_alive():
+                            Threading.threadDeleting.start()
+                    except:
+                        print('Error with deleting year-time spools')
+                        MailExchanging.sendMail(MailExchanging.MailVariables.subDeletingError,
+                                                MailExchanging.MailVariables.textDeletingError,
+                                                MailExchanging.MailVariables.recMailsErrors)
+                except KeyboardInterrupt:
+                    print('Manual break by user')
+                    MailExchanging.sendMail(MailExchanging.MailVariables.subKeyboardInterruptError,
+                                            MailExchanging.MailVariables.textKeyboardInterruptError,
                                             MailExchanging.MailVariables.recMailsErrors)
-                try:
-                    Threading.threadDeleting.start()
-                except:
-                    print('Error with deleting year-time spools')
-                    MailExchanging.sendMail(MailExchanging.MailVariables.subDeletingError,
-                                            MailExchanging.MailVariables.textDeletingError,
-                                            MailExchanging.MailVariables.recMailsErrors)
-                for t in Threading.threads:
-                    t.join()
-            except KeyboardInterrupt:
-                print('Manual break by user')
-                MailExchanging.sendMail(MailExchanging.MailVariables.subKeyboardInterruptError,
-                                        MailExchanging.MailVariables.textKeyboardInterruptError,
-                                        MailExchanging.MailVariables.recMailsErrors)
-                break
+                    break
         except TimeoutError:
             print('Connection declined! Trying again in 30 seconds.')
             #    MailExchanging.sendMail(MailExchanging.MailVariables.subConnectionError,
             #                            MailExchanging.MailVariables.textConnectionError,
             #                            MailExchanging.MailVariables.recMailsErrors)
-            Threading.threadSleep30.start()
+            with Threading.threadLockSleep30:
+                for t in Threading.threads30:
+                    t.join()
+                threadSleep30 = Threading.myThread(5, "ThreadSleep5", 30)
+                threadSleep30.start()
+                Threading.threads30.append(threadSleep30)
 
 
 #       -----  MAIN FUNCTION CALL ------

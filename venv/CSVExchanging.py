@@ -4,6 +4,7 @@ import datetime  # Imports datetime module for getting date and time
 import hashlib  # Imports module for hashing
 import os.path  # Imports module for pathing
 import sys  # Imports sys module for system operations
+import threading  # Imports threading module for threading
 import time  # Imports time module for operations with time
 
 #       -----  IMPORTS FROM PROJECT ------
@@ -47,7 +48,12 @@ def readCSV(filename):
     pathCSV = pathClient + filename + str('.csv')
 
     while not os.path.exists(pathCSV):
-        Threading.threadSleep5.start()
+        with Threading.threadLockSleep5:
+            for t in Threading.threads5:
+                t.join()
+            threadSleep5 = Threading.myThread(4, "ThreadSleep5", 5)
+            threadSleep5.start()
+            Threading.threads5.append(threadSleep5)
     if os.path.isfile(pathCSV):
         try:
             with open(pathCSV, 'r') as csv_file_r:
