@@ -12,8 +12,12 @@ import Threading
 
 while True:
     try:
-        if not Threading.threadPerform.is_alive():
-            Threading.threadPerform.start()
+        with Threading.threadLockPerform:
+            for t in Threading.threads:
+                t.join()
+            threadPerform = Threading.myThread(1, "ThreadPerform", None)
+            threadPerform.start()
+            Threading.threads.append(threadPerform)
         try:
             if not Threading.threadRaport.is_alive():
                 Threading.threadRaport.start()
@@ -42,7 +46,7 @@ while True:
                     threadSleep30.start()
                     Threading.threads30.append(threadSleep30)
             except:
-                    print('Error sleep')
+                print('Error sleep')
         except:
             print('Error with deleting year-time spools')
             MailExchanging.sendMail(MailExchanging.MailVariables.subDeletingError,
