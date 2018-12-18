@@ -116,10 +116,8 @@ def saveToDatabase(filename):
     generationDateTime = (generationDate + ' ' + generationTime)[:-3]
 
     #  ----- SKIPPING FOUR UNNECESSARY LINES -----  #
-    next(csv_reader)
-    next(csv_reader)
-    next(csv_reader)
-    next(csv_reader)
+    for i in range(0, 4):
+        next(csv_reader)
 
     #  ----- READING EACH ATTRIBUTE FROM FILE -----  #
     for line in csv_reader:
@@ -144,12 +142,10 @@ def saveToDatabase(filename):
     fileCSV.close()
 
     #  ----- INSERTING ATTRIBUTE VALUES IN DATABASE -----  #
-    query = 'INSERT INTO spool VALUES (\'' + str(hashedName) + '\', ' + str(nameOfFile) + ', \'' + str(
-        generationDateTime) + '\', \'' + \
-            str(values[0]) + '\', \'' + str(values[1]) + '\', \'' + str(values[2]) + '\', ' + str(
-        float(values[3])) + ', ' + str(float(values[4])) + ', ' + str(
-        values[5]) + ', ' + str(values[6]) + ', ' + str(values[7]) + ', ' + str(values[8]) + ', ' + str(
-        values[9]) + ', \'' + pathClient + '\');'
+    query = 'INSERT INTO spool VALUES (\'' + str(hashedName) + '\', ' + str(nameOfFile) + ', \'' + str(generationDateTime) \
+            + '\', \'' + str(values[0]) + '\', \'' + str(values[1]) + '\', \'' + str(values[2]) + '\', '\
+            + str(float(values[3])) + ', ' + str(float(values[4])) + ', ' + str(values[5]) + ', ' + str(values[6]) + ', '\
+            + str(values[7]) + ', ' + str(values[8]) + ', ' + str(values[9]) + ', \'' + pathClient + '\');'
     cur = connectDB().cursor()
     cur.execute(query)
     connectDB().close()

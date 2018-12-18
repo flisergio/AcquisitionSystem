@@ -118,7 +118,7 @@ def deleteSpool():
 
 def main():
     while True:
-        if datetime.datetime.now().strftime('%X') == '12:49:20':
+        if datetime.datetime.now().strftime('%X') == '00:00:00':
             try:
                 sendDailyRaport()
             except:
