@@ -6,6 +6,7 @@ import CSVExchanging
 import MailExchanging
 import psycopg2  # Imports psycopg2 module for communication with PostgreSQL
 
+
 def sendDailyRaport():
     cur = CSVExchanging.connectDB().cursor()
 
@@ -39,6 +40,7 @@ def sendDailyRaport():
         diameterSubtext = 'With diameter ' + str(value)[1:-2] + ': ' + str(numWithSpoolDiameter)
         diameterForMail = diameterForMail + diameterSubtext + '\n'
 
+    '''
     #  ----- FINDING DIFFERENT MASS VALUES BY DATE FOR MAIL -----
     queryForMassValues = 'SELECT DISTINCT mass FROM spool WHERE date BETWEEN \'' + dateTimeDayBefore + \
                          ' 00:00:00\' AND \'' + dateTimeDayBefore + ' 23:59:59\' ORDER BY mass;'
@@ -53,7 +55,7 @@ def sendDailyRaport():
         numWithSpoolMass = cur.fetchone()[0]
         massSubtext = 'With mass ' + str(value)[1:-2] + ': ' + str(numWithSpoolMass)
         massForMail = massForMail + massSubtext + '\n'
-
+    '''
     #  ----- FINDING DIFFERENT MATERIAL VALUES BY DATE FOR MAIL -----
     queryForMaterialValues = 'SELECT DISTINCT material FROM spool WHERE date BETWEEN \'' + dateTimeDayBefore + \
                              ' 00:00:00\' AND \'' + dateTimeDayBefore + ' 23:59:59\' ORDER BY material;'
@@ -89,10 +91,9 @@ def sendDailyRaport():
     mailSubject = 'Spool production raport for ' + dateForMail
     if numOfSpools > 0:
         mailText = 'Total spools produced: ' + str(numOfSpools) + '\n\n' + \
-                   ' \t\t\t----- Diameter value: number of spools with this diameter ----- \n' + diameterForMail + '\n' + \
-                   ' \t\t\t----- Mass value: number of spools with this mass ----- \n' + massForMail + '\n' + \
-                   ' \t\t\t----- Material value: number of spools with this material ----- \n' + materialForMail + '\n' + \
-                   ' \t\t\t----- Color value: number of spools with this color ----- \n' + colorForMail + '\n'
+                   ' \t----- Diameter value: number of spools with this diameter ----- \n' + diameterForMail + '\n' + \
+                   ' \t----- Material value: number of spools with this material ----- \n' + materialForMail + '\n' + \
+                   ' \t----- Color value: number of spools with this color ----- \n' + colorForMail + '\n'
     else:
         mailText = 'Total spools produced: ' + str(numOfSpools) + '\n\n' + 'No spools produced this day!'
     MailExchanging.sendMail(mailSubject, mailText, MailExchanging.MailVariables.recMails)
@@ -115,6 +116,7 @@ def deleteSpool():
     mailSubject = 'Deleted all spools produced ' + dateYearBeforeForMail
     mailText = 'Spools that were produced ' + dateYearBeforeForMail + ' were deleted from database!'
     MailExchanging.sendMail(mailSubject, mailText, MailExchanging.MailVariables.recMails)
+
 
 def main():
     while True:

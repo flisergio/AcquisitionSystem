@@ -53,7 +53,7 @@ class MailVariables:
     acqsysMail = 'acqsys@mora-solutions.com'
     acqsysPass = '!koMORA1'
 
-    recMails = ['maciejjakubek@gmail.com', 'sergey.dko@gmail.com']
+    recMails = ['michal@spectrumfilaments.com', 'maciejjakubek@gmail.com', 'sergey.dko@gmail.com']
     recMailsErrors = ['maciejjakubek@gmail.com', 'sergey.dko@gmail.com']
 
 

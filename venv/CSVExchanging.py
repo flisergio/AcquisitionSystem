@@ -5,6 +5,7 @@ import hashlib  # Imports module for hashing
 import os.path  # Imports module for pathing
 import sys  # Imports sys module for system operations
 import time  # Imports time module for operations with time
+import codecs
 
 #       -----  IMPORTS FROM PROJECT ------
 import MailExchanging
@@ -12,7 +13,8 @@ import psycopg2  # Imports psycopg2 module for communication with PostgreSQL
 import virtualenv  # Imports virtual environment
 
 #       -----  GLOBAL VARIABLES NEEDED FOR FILE FINDING  ------
-pathClient = 'C:\\Users\\fliesrgio\\Downloads\\'
+pathClient = 'C:\\Users\\fliesrgio\\Downloads\\CSV_Files_AcqSys\\spool\\'
+pathForDB = '/spool-data/'
 longText = 'Probably it does not exist or currently located in some other place!'
 
 
@@ -92,12 +94,14 @@ def connectDB():
 
 #       -----  SAVES INFORMATION ABOUT SPOOL IN DATABASE ------
 def saveToDatabase(filename):
-    attributes = ['Material', 'ColorName', 'ColorRal', 'Diameter', 'Tolerance', 'Mass',
-                  'PrintingTamp', 'SpoolDiaExt', 'SpoolDiaInt', 'SpoolWidth']
-    values = ['!!!', '!!!', '!!!', 999, 999, 999, 999, 999, 999, 999]
+    attributes = ['Material', 'ColorName', 'ColorRal', 'Diameter', 'Tolerance',
+                  'PrintingTemp', 'SpoolDiaExt', 'SpoolDiaInt', 'SpoolWidth']
+    values = ['!!!', '!!!', '!!!', 999, 999, 999, 999, 999, 999]
 
     pathCSV = pathClient + filename + str('.csv')
     fileCSV = open(pathCSV, 'r')
+    #for x in fileCSV:
+     #   x.replace('\0', '')
     csv_reader = csv.reader(fileCSV, delimiter=';')
 
     nameOfFile = filename
@@ -120,32 +124,42 @@ def saveToDatabase(filename):
         next(csv_reader)
 
     #  ----- READING EACH ATTRIBUTE FROM FILE -----  #
-    for line in csv_reader:
-        for attribute in attributes:
-            attributeNameValueSplit = str(line).split(',')
-            attributeNameBadFormat = str(attributeNameValueSplit[0])
-            attributeName = attributeNameBadFormat[4:-1]
-            if attributeName == attribute:
-                print(line)
-                attributeValueSplit = str(attributeNameValueSplit[1])
-                attributeValue = attributeValueSplit[1:-3]
-                if attributeValue == '999':
-                    print('a')
-                    if attributes.index(attribute) == 0 or attributes.index(attribute) == 1 or attributes.index(
-                            attribute) == 2:
-                        values[attributes.index(attribute)] = '!!!'
-                    else:
-                        values[attributes.index(attribute)] = 999
-                    continue
-                else:
-                    values[attributes.index(attribute)] = attributeValue
-    fileCSV.close()
+    while True:
+        try:
+            for line in csv_reader:
+                try:
+                    for attribute in attributes:
+                        attributeNameValueSplit = str(line).split(',')
+                        attributeNameBadFormat = str(attributeNameValueSplit[0])
+                        attributeName = attributeNameBadFormat[2:-1]
+                        if attributeName == attribute:
+                            attributeValueSplit = str(attributeNameValueSplit[1])
+                            attributeValue = attributeValueSplit[2:-2]
+                            if attributeValue == '999':
+                                if attributes.index(attribute) == 0 or attributes.index(attribute) == 1 or attributes.index(
+                                        attribute) == 2:
+                                    values[attributes.index(attribute)] = '!!!'
+                                else:
+                                    values[attributes.index(attribute)] = 999
+                                continue
+                            else:
+                                values[attributes.index(attribute)] = attributeValue
+                            break
+                except:
+                    break
+            print(values)
+            fileCSV.close()
+        except csv.Error:
+            str(line).replace('\0', '')
+        break
 
     #  ----- INSERTING ATTRIBUTE VALUES IN DATABASE -----  #
-    query = 'INSERT INTO spool VALUES (\'' + str(hashedName) + '\', ' + str(nameOfFile) + ', \'' + str(generationDateTime) \
-            + '\', \'' + str(values[0]) + '\', \'' + str(values[1]) + '\', \'' + str(values[2]) + '\', '\
-            + str(float(values[3])) + ', ' + str(float(values[4])) + ', ' + str(values[5]) + ', ' + str(values[6]) + ', '\
-            + str(values[7]) + ', ' + str(values[8]) + ', ' + str(values[9]) + ', \'' + pathClient + '\');'
+    query = 'INSERT INTO spool VALUES (\'' + str(hashedName) + '\', ' + str(nameOfFile) + ', \'' + \
+            str(generationDateTime) \
+            + '\', \'' + str(values[0]) + '\', \'' + str(values[1]) + '\', \'' + str(values[2]) + '\', ' \
+            + str(float(values[3])) + ', ' + str(float(values[4])) + ', ' + str(values[5]) + ', ' \
+            + str(values[6]) + ', ' + str(values[7]) + ', ' + str(values[8]) + ', \'' + pathForDB + '\');'
+
     cur = connectDB().cursor()
     cur.execute(query)
     connectDB().close()
