@@ -29,7 +29,6 @@ def JSONWrite(hashid):
     valuesX = []
     valuesY = []
 
-    #       fileCSV = open(filePath, 'r')
     fileCSV = open(myFilePath, 'r')
     csv_reader = csv.reader(fileCSV, delimiter=';')
 
@@ -68,7 +67,6 @@ def JSONWrite(hashid):
                             break
                 except:
                     break
-
             JSONOvality = values[0]
             JSONMean = values[1]
             JSONDev = values[2]

@@ -15,7 +15,6 @@ def sendDailyRaport():
     dateTimeDayBefore = (dateDayBeforeBadFormat.strftime("%Y-%m-%d"))
 
     diameterForMail = ''
-    massForMail = ''
     materialForMail = ''
     colorForMail = ''
 

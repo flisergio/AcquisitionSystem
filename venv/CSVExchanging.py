@@ -5,7 +5,6 @@ import hashlib  # Imports module for hashing
 import os.path  # Imports module for pathing
 import sys  # Imports sys module for system operations
 import time  # Imports time module for operations with time
-import codecs
 
 #       -----  IMPORTS FROM PROJECT ------
 import MailExchanging
@@ -100,8 +99,6 @@ def saveToDatabase(filename):
 
     pathCSV = pathClient + filename + str('.csv')
     fileCSV = open(pathCSV, 'r')
-    #for x in fileCSV:
-     #   x.replace('\0', '')
     csv_reader = csv.reader(fileCSV, delimiter=';')
 
     nameOfFile = filename
