@@ -110,11 +110,3 @@ def JSONWrite(hashid):
 
     JSONSpool = json.dumps(spool, sort_keys=True, indent=1, default=default)
     print(JSONSpool)
-
-
-def main():
-    JSONWrite('8a5a5d8dbc9fc0045b5630fad54d146f')
-
-
-if __name__ == '__main__':
-    main()
