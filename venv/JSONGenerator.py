@@ -1,7 +1,5 @@
 import csv
 import json
-#   import matplotlib.pyplot as plt
-#   import mpld3
 
 import CSVExchanging
 
@@ -24,14 +22,13 @@ def JSONWrite(hashid):
     fileName = str(filePathAttributes[0])[1:]
     filePath = fileLocation + str(fileName) + '.csv'
 
-    myFilePath = 'C:\\Users\\fliesrgio\\Downloads\\CSV_Files_AcqSys\\spool\\' + str(fileName) + '.csv'
+    myFilePath = 'spools/' + str(fileName) + '.csv'
 
     attributes = ['Ovality', 'Mean', 'StdDev', 'Length']
     values = [999, 999, 999, 999]
     valuesX = []
     valuesY = []
 
-    #       fileCSV = open(filePath, 'r')
     fileCSV = open(myFilePath, 'r')
     csv_reader = csv.reader(fileCSV, delimiter=';')
 
@@ -39,13 +36,13 @@ def JSONWrite(hashid):
         try:
             for line in csv_reader:
                 if len(line) == 5:
-                    valueX = str(str(line).split(', ')[2])[1:-1]
-                    if valueX != 'Length':
-                        valueX = float(valueX)
-                        firstValueY = float(str(line).split(', ')[3][1:-1])
-                        secondValueY = float(str(line).split(', ')[4][1:-2])
-                        valueYBadFormat = (firstValueY + secondValueY) / 2
-                        valueY = round(valueYBadFormat, 3)
+                    valueY = str(str(line).split(', ')[2])[1:-1]
+                    if valueY != 'Length':
+                        valueY = float(valueY)
+                        firstValueX = float(str(line).split(', ')[3][1:-1])
+                        secondValueX = float(str(line).split(', ')[4][1:-2])
+                        valueXBadFormat = (firstValueX + secondValueX) / 2
+                        valueX = round(valueXBadFormat, 3)
 
                         valuesX.append(valueX)
                         valuesY.append(valueY)
@@ -70,7 +67,6 @@ def JSONWrite(hashid):
                             break
                 except:
                     break
-
             JSONOvality = values[0]
             JSONMean = values[1]
             JSONDev = values[2]
@@ -85,7 +81,6 @@ def JSONWrite(hashid):
     queryForJSON = 'SELECT date, material, colorname, colorral, diameter, tolerance FROM spool WHERE hashid = \'' + hashid + '\';'
     cur.execute(queryForJSON)
     queryForJSONResult = cur.fetchone()
-    #   colorForGraph = 'orange'
     JSONDate = queryForJSONResult[0]
 
     attributeListBadFormat = str(queryForJSONResult).split(')')
@@ -94,42 +89,12 @@ def JSONWrite(hashid):
 
     JSONMaterial = attributeListSplit[1]
     JSONColorName = attributeListSplit[2]
-    '''
-    if JSONColorName.__contains__('BLUE'):
-        colorForGraph = 'blue'
-    elif JSONColorName.__contains__('RED'):
-        colorForGraph = 'red'
-    '''
     JSONColorRal = attributeListSplit[3]
     JSONDiameter = attributeListSplit[4]
     JSONTolerance = attributeListSplit[5]
-    '''
-    sumY = 0
-    for y in valuesY:
-        sumY += y
-    avgValue = sumY / len(valuesY)
-    minValue = min(valuesY)
-    maxValue = max(valuesY)
 
-    axXMax = len(valuesX) / 10
-    axYMin = minValue - 0.01
-    axYMax = maxValue + 0.025
-
-    fig = plt.figure(figsize=(15, 4))
-    ax = plt.subplot()
-    ax.plot(valuesX, valuesY, linewidth=1, color=colorForGraph)
-    plt.title('Spool ' + hashid, fontsize='xx-large', fontweight='extra bold')
-    plt.xlabel('Test, number(x10)', fontsize='x-large', fontweight='extra bold')
-    plt.ylabel('Diameter, mm', fontsize='x-large', fontweight='extra bold')
-    plt.axis([0, axXMax, axYMin, axYMax])
-    plt.tick_params(axis='both', direction='out', length=5)
-    plt.grid(True)
-    ax.grid(color='black', linestyle='--', linewidth=1, alpha=0.75)
-    plt.show()
-    mpld3.save_html(fig, 'templates/test.html')
-    '''
     spool = {
-        'date': str(JSONDate),
+        'dateprod': str(JSONDate),
         'material': JSONMaterial[1:-1],
         'color': JSONColorName[1:-1],
         'ral': JSONColorRal[1:-1],
@@ -139,8 +104,10 @@ def JSONWrite(hashid):
         'mean': float(JSONMean),
         'deviation': float(JSONDev),
         'length': float(JSONLength),
+        'labelY': valuesY,
+        'labelX': valuesX
     }
 
     JSONSpool = json.dumps(spool, sort_keys=True, indent=1, default=default)
-    #   print(JSONSpool)
+    print(type(JSONSpool))
     return str(JSONSpool)

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"
+      name="viewport" content="width=device-width, initial-scale=1">
+<script src="http://d3js.org/d3.v3.min.js"> </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="jQuery.scrollTo.min.js"></script>
+<style>
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+}
+
+.line {
+    fill: none;
+    stroke: rgb(125, 3, 155);
+    stroke-width: 3px;
+}
+
+.area {
+    fill: lightgrey;
+    opacity: 0.5;
+    stroke: grey;
+    stroke-width: 1;
+}
+
+.tick text {
+    font-size: 12px;
+}
+
+.tick line{
+    opacity: 0.2;
+}
+
+body {
+    background-color: rgb(255, 255, 151);
+}
+body {font-family: "Lato", sans-serif;}
+
+.tablink {
+  background-color: #555;
+  color: white;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 18px;
+  width: 25%;
+}
+
+.checklink {
+  background-color: #555;
+  color: white;
+  float: left;
+  border: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 18px;
+  width: 25.1%;
+}
+
+.textlink {
+  background-color: white;
+  float: left;
+  cursor: copy;
+  padding: 12px 16px;
+  font-size: 18px;
+  width: 72.5%;
+}
+
+.tablink:hover {
+  background-color: #777;
+  text-decoration: underline;
+}
+
+.checklink:hover {
+  background-color: #777;
+  text-decoration: underline;
+}
+
+.tabcontent {
+  color: white;
+  display: none;
+  padding: 50px;
+  text-align: center;
+}
+
+#Diameter {background-color:red; font-size:25px;}
+#Material {background-color:rgb(255,137,0); font-size:25px;}
+#Color {background-color:rgb(255,230,0); font-size:25px;}
+#Mean {background-color:green; font-size:25px;}
+#Ovality {background-color:rgb(0,222,255); font-size:25px;}
+#Deviation {background-color:blue; font-size:25px;}
+#Date {background-color:purple; font-size:25px;}
+</style>
+<body>
+    <h1>INFORMATION ABOUT SPOOL</h1>
+    <script src="chart.js"></script>
+    <input class="textlink" type="text" id="myText" placeholder="Provide spool number">
+    <button class="checklink" onclick="clickEvent();">Check this number</button>
+    <br><br><br>
+
+    <div id="Diameter" class="tabcontent">
+        <h1>Diameter</h1>
+    </div>
+
+    <div id="Material" class="tabcontent">
+      <h1>Material</h1>
+    </div>
+
+    <div id="Color" class="tabcontent">
+      <h1>Color</h1>
+    </div>
+
+    <div id="Mean" class="tabcontent">
+      <h1>Mean diameter</h1>
+    </div>
+
+    <div id="Ovality" class="tabcontent">
+      <h1>Ovality</h1>
+    </div>
+
+    <div id="Deviation" class="tabcontent">
+      <h1>Standard deviation</h1>
+    </div>
+
+    <div id="Date" class="tabcontent">
+      <h1>Date of production</h1>
+    </div>
+
+    <script>
+        mainHeader();
+    </script>
+</body>
+</html>
