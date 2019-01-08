@@ -29,9 +29,16 @@ function openParameter(parameterName, element, color) {
 }
 
 function createButtons() {
+    var buttonGraph = document.createElement("button");
+    var buttonGraphText = document.createTextNode("Go to graph");
+    buttonGraph.id = "defaultOpen";
+    buttonGraph.className = "tablink";
+    buttonGraph.appendChild(buttonGraphText);
+    buttonGraph.setAttribute("onClick", "$('html, body').animate({scrollTop:$(document).height()}, 'slow')");
+    document.body.appendChild(buttonGraph);
+
     var buttonDiameter = document.createElement("button");
     var buttonDiameterText = document.createTextNode("Diameter");
-    buttonDiameter.id = "defaultOpen";
     buttonDiameter.className = "tablink";
     buttonDiameter.appendChild(buttonDiameterText);
     buttonDiameter.setAttribute("onClick", "openParameter('Diameter', this, 'red'); $('html, body').animate({scrollTop: 0}, 'medium')");
@@ -78,13 +85,6 @@ function createButtons() {
     buttonDate.appendChild(buttonDateText);
     buttonDate.setAttribute("onClick", "openParameter('Date', this, 'purple'); $('html, body').animate({scrollTop: 0}, 'medium')");
     document.body.appendChild(buttonDate);
-
-    var buttonGraph = document.createElement("button");
-    var buttonGraphText = document.createTextNode("Go to graph");
-    buttonGraph.className = "tablink";
-    buttonGraph.appendChild(buttonGraphText);
-    buttonGraph.setAttribute("onClick", "$('html, body').animate({scrollTop:$(document).height()}, 'slow')");
-    document.body.appendChild(buttonGraph);
 }
 
 function removeButtons() {
