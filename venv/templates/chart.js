@@ -87,6 +87,11 @@ function createButtons() {
     document.body.appendChild(buttonGraph);
 }
 
+function removeButtons() {
+    $(".tablink").remove();
+    d3.select("svg").remove();
+}
+
 function myFunction() {
     var x = document.getElementById("myText").value;
     var url = 'http://217.182.72.46:5000/?key=' + document.getElementById("myText").value;
@@ -104,6 +109,7 @@ function myFunction() {
         inputText.classList.add('input-placeholder');
     }
 
+    removeButtons();
     createButtons();
 
     xmlhttp.onreadystatechange = function() {
@@ -151,43 +157,44 @@ function myFunction() {
             */
 
             var classParagraph = document.createElement("p");
+            var selectClassParagraph = document.querySelector("p");
 
             var body = document.querySelector("body");
 
             var classDiameterParagraph = document.createTextNode(my_data.diameter + " milimeters");
             classParagraph.appendChild(classDiameterParagraph);
             var classDiameter = document.getElementById("Diameter");
-            classDiameter.appendChild(classDiameterParagraph);
+            classDiameter.replaceChild(classDiameterParagraph, classDiameter.childNodes[0]);
 
             var classMaterialParagraph = document.createTextNode(my_data.material);
             classParagraph.appendChild(classMaterialParagraph);
             var classMaterial = document.getElementById("Material");
-            classMaterial.appendChild(classMaterialParagraph);
+            classMaterial.replaceChild(classMaterialParagraph, classMaterial.childNodes[0]);
 
             var classColorParagraph = document.createTextNode(my_data.color);
             classParagraph.appendChild(classColorParagraph);
             var classColor = document.getElementById("Color");
-            classColor.appendChild(classColorParagraph);
+            classColor.replaceChild(classColorParagraph, classColor.childNodes[0]);
 
-            var classMeanParagraph = document.createTextNode(my_data.mean + " milimeters");
+            var classMeanParagraph = document.createTextNode(my_data.mean.toFixed(3) + " milimeters");
             classParagraph.appendChild(classMeanParagraph);
             var classMean = document.getElementById("Mean");
-            classMean.appendChild(classMeanParagraph);
+            classMean.replaceChild(classMeanParagraph, classMean.childNodes[0]);
 
-            var classOvalityParagraph = document.createTextNode(my_data.ovality);
+            var classOvalityParagraph = document.createTextNode((my_data.ovality * 100).toFixed(1) + "%");
             classParagraph.appendChild(classOvalityParagraph);
             var classOvality = document.getElementById("Ovality");
-            classOvality.appendChild(classOvalityParagraph);
+            classOvality.replaceChild(classOvalityParagraph, classOvality.childNodes[0]);
 
-            var classDeviationParagraph = document.createTextNode(my_data.deviation);
+            var classDeviationParagraph = document.createTextNode((my_data.deviation * 1000).toFixed(1) + " micrometers");
             classParagraph.appendChild(classDeviationParagraph);
             var classDeviation = document.getElementById("Deviation");
-            classDeviation.appendChild(classDeviationParagraph);
+            classDeviation.replaceChild(classDeviationParagraph, classDeviation.childNodes[0]);
 
             var classDateParagraph = document.createTextNode(my_data.dateprod);
             classParagraph.appendChild(classDateParagraph);
             var classDate = document.getElementById("Date");
-            classDate.appendChild(classDateParagraph);
+            classDate.replaceChild(classDateParagraph, classDate.childNodes[0]);
 
             document.getElementById("defaultOpen").click();
 
