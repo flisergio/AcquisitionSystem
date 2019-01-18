@@ -2,30 +2,28 @@ function mainHeader() {
     d3.select('h1').style('color', 'black')
     .attr('class', 'heading')
     .style('font-size', '50px')
-    .style('font-family', 'Georgia')
+    .style('font-family', 'Uguntu')
     .style('text-align', 'center')
     .style('text-decoration', 'underline')
     .style('text-decoration-style', 'solid');
 }
-/*
-function appendBody(t) {
-    d3.select('body').append('p').text(t)
-    .style('color', d3.rgb(125, 3, 155));
-}
-*/
+
 function openParameter(parameterName, element, color) {
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");
+
   for (i = 0; i < tabcontent.length; i++) {
     tabcontent[i].style.display = "none";
   }
+
   tablinks = document.getElementsByClassName("tablink");
+
   for (i = 0; i < tablinks.length; i++) {
     tablinks[i].style.backgroundColor = "";
   }
+
   document.getElementById(parameterName).style.display = "block";
   element.style.backgroundColor = color;
-
 }
 
 function createButtons() {
@@ -41,53 +39,53 @@ function createButtons() {
     var buttonDiameterText = document.createTextNode("Diameter");
     buttonDiameter.className = "tablink";
     buttonDiameter.appendChild(buttonDiameterText);
-    buttonDiameter.setAttribute("onClick", "openParameter('Diameter', this, 'red'); $('html, body').animate({scrollTop: 0}, 'medium')");
+    buttonDiameter.setAttribute("onClick", "openParameter('Diameter', this, 'red'); $('html, body').animate({scrollTop: 120}, 'medium')");
     document.body.appendChild(buttonDiameter);
 
     var buttonMaterial = document.createElement("button");
     var buttonMaterialText = document.createTextNode("Material");
     buttonMaterial.className = "tablink";
     buttonMaterial.appendChild(buttonMaterialText);
-    buttonMaterial.setAttribute("onClick", "openParameter('Material', this, 'rgb(255,137,0)'); $('html, body').animate({scrollTop: 0}, 'medium')");
+    buttonMaterial.setAttribute("onClick", "openParameter('Material', this, 'rgb(255,137,0)'); $('html, body').animate({scrollTop: 120}, 'medium')");
     document.body.appendChild(buttonMaterial);
 
     var buttonColor = document.createElement("button");
     var buttonColorText = document.createTextNode("Color");
     buttonColor.className = "tablink";
     buttonColor.appendChild(buttonColorText);
-    buttonColor.setAttribute("onClick", "openParameter('Color', this, 'rgb(255,230,0)'); $('html, body').animate({scrollTop: 0}, 'medium')");
+    buttonColor.setAttribute("onClick", "openParameter('Color', this, 'rgb(255,230,0)'); $('html, body').animate({scrollTop: 120}, 'medium')");
     document.body.appendChild(buttonColor);
 
     var buttonMean = document.createElement("button");
     var buttonMeanText = document.createTextNode("Mean");
     buttonMean.className = "tablink";
     buttonMean.appendChild(buttonMeanText);
-    buttonMean.setAttribute("onClick", "openParameter('Mean', this, 'green'); $('html, body').animate({scrollTop: 0}, 'medium')");
+    buttonMean.setAttribute("onClick", "openParameter('Mean', this, 'green'); $('html, body').animate({scrollTop: 120}, 'medium')");
     document.body.appendChild(buttonMean);
 
     var buttonOvality = document.createElement("button");
     var buttonOvalityText = document.createTextNode("Ovality");
     buttonOvality.className = "tablink";
     buttonOvality.appendChild(buttonOvalityText);
-    buttonOvality.setAttribute("onClick", "openParameter('Ovality', this, 'rgb(0,222,255)'); $('html, body').animate({scrollTop: 0}, 'medium')");
+    buttonOvality.setAttribute("onClick", "openParameter('Ovality', this, 'rgb(0,222,255)'); $('html, body').animate({scrollTop: 120}, 'medium')");
     document.body.appendChild(buttonOvality);
 
     var buttonDeviation = document.createElement("button");
     var buttonDeviationText = document.createTextNode("Deviation");
     buttonDeviation.className = "tablink";
     buttonDeviation.appendChild(buttonDeviationText);
-    buttonDeviation.setAttribute("onClick", "openParameter('Deviation', this, 'blue'); $('html, body').animate({scrollTop: 0}, 'medium')");
+    buttonDeviation.setAttribute("onClick", "openParameter('Deviation', this, 'blue'); $('html, body').animate({scrollTop: 120}, 'medium')");
     document.body.appendChild(buttonDeviation);
 
     var buttonDate = document.createElement("button");
     var buttonDateText = document.createTextNode("Date");
     buttonDate.className = "tablink";
     buttonDate.appendChild(buttonDateText);
-    buttonDate.setAttribute("onClick", "openParameter('Date', this, 'purple'); $('html, body').animate({scrollTop: 0}, 'medium')");
+    buttonDate.setAttribute("onClick", "openParameter('Date', this, 'purple'); $('html, body').animate({scrollTop: 120}, 'medium')");
     document.body.appendChild(buttonDate);
 }
 
-function removeButtons() {
+function removeElements() {
     $(".tablink").remove();
     d3.select("svg").remove();
 }
@@ -109,7 +107,7 @@ function myFunction() {
         inputText.classList.add('input-placeholder');
     }
 
-    removeButtons();
+    removeElements();
     createButtons();
 
     xmlhttp.onreadystatechange = function() {
@@ -138,23 +136,6 @@ function myFunction() {
 
                 var xm = (LabX.length / 10) + (LabX.length / 1000);
             }
-            /*
-            textDiameter = 'Diameter: ' + my_data.diameter;
-            textMaterial = 'Material: ' + my_data.material;
-            textColor = 'Color: ' + my_data.color;
-            textMean = 'Mean diameter: ' + my_data.mean;
-            textOvality = 'Ovality: ' + my_data.ovality;
-            textDeviation = 'Standard deviation: ' + my_data.deviation;
-            textDate = 'Date of production: ' + my_data.dateprod;
-
-            appendBody(textDiameter);
-            appendBody(textMaterial);
-            appendBody(textColor);
-            appendBody(textMean);
-            appendBody(textOvality);
-            appendBody(textDeviation);
-            appendBody(textDate);
-            */
 
             var classParagraph = document.createElement("p");
             var selectClassParagraph = document.querySelector("p");
@@ -200,7 +181,7 @@ function myFunction() {
 
             var margin = {top: 20, right: 100, bottom: 30, left: 100},
             width = 1500 - margin.left - margin.right,
-            height = 500 - margin.top - margin.bottom;
+            height = 250 - margin.top - margin.bottom;
             rawData = LabX.map(function(d, i){
               return { 'x': d, 'y' : LabY[i] };
             }),
@@ -208,7 +189,19 @@ function myFunction() {
                     { x: 0.3, y0: areaMax, y1: areaMin, },
                     { x: xm, y0: areaMax, y1: areaMin, },
             ];
-            data=[];
+
+            data = [];
+            var tempForTicksY = [];
+            var tempForTicksX = [];
+
+            var i;
+            for (i = 0; i < LabX.length / 10; i++) {
+                if (i % 50 == 0) {
+                    tempForTicksX.push(i);
+                }
+            }
+
+
             var svg = d3.select("body").append("svg")
                     .attr("width", width + margin.left + margin.right)
                     .attr("height", height + margin.top + margin.bottom)
@@ -216,8 +209,8 @@ function myFunction() {
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
                     .style("stroke", "black")
                     .style("stroke-width", 1)
-                    .style("fill", "none");    
-                      
+                    .style("fill", "none") 
+
             var scaleX = d3.scale.linear()
                         .domain([0, xm])
                         .range([0, width]);
@@ -226,11 +219,13 @@ function myFunction() {
                 var scaleY = d3.scale.linear()
                             .domain([1.8, 1.7])
                             .range([0, height]);
+                tempForTicksY = [1.7, 1.73, 1.75, 1.77, 1.8];
             }
             else if (my_data.diameter == 2.85) {
                 var scaleY = d3.scale.linear()
                             .domain([2.95, 2.75])
                             .range([0, height]);
+                tempForTicksY = [2.75, 2.8, 2.83, 2.85, 2.87, 2.9, 2.95];
             }
 
             for(i = 0; i < rawData.length; i++)
@@ -241,15 +236,20 @@ function myFunction() {
                          .orient("bottom").ticks(10)
                          .innerTickSize(-height)
                          .outerTickSize(0)
+                         .tickValues(tempForTicksX)
+                .tickFormat(function(d, i){
+                    return d + 'm'
+                })
                          .tickPadding(10);
 
             var yAxis = d3.svg.axis()
                          .scale(scaleY)
                          .orient("left")
+                         .tickValues(tempForTicksY)
                          .innerTickSize(-width)
                          .outerTickSize(0)
                          .tickPadding(10);
-                       
+           
             var area = d3.svg.area()
                 .x(function(d) { return scaleX(d.x); })
                 .y0(function(d) { return scaleY(d.y0); })
@@ -277,18 +277,61 @@ function myFunction() {
                 .data([data])
                 .attr("class", "line")
                 .attr("d", line);
+
+            var bisectDate = d3.bisector(function(d) { return d.x; }).left,
+                formatValue = d3.format(",.3f"),
+                formatDiameterValue = function(d) { return formatValue(d) + " mm"; },
+                formatMetersValue = function(d) { return d + " m"};
+
+            var focus = svg.append("g")
+                .attr("class", "focus")
+                .style("display", "none");
+
+            focus.append("circle")
+                .attr("r", 4.5);
+
+            focus.append("text")
+                .attr("x", -27)
+                .attr("y", -15)
+                .attr("dy", ".35em");
+
+            svg.append("rect")
+                .attr("class", "overlay")
+                .attr("width", width)
+                .attr("height", height)
+                .on("mouseover", function() { focus.style("display", null); })
+                .on("mouseout", function() { focus.style("display", "none"); })
+                .on("mousemove", mousemove);
+
+            function mousemove() {
+                var x0 = scaleX.invert(d3.mouse(this)[0]),
+                    i = bisectDate(rawData, x0, 1),
+                    d0 = rawData[i - 1],
+                    d1 = rawData[i],
+                    d = x0 - d0.x > d1.x - x0 ? d1 : d0;
+                focus.attr("transform", "translate(" + scaleX(d.x) + "," + scaleY(d.y) + ")");
+//                focus.select('text')
+                    //.append('svg:tspan')
+//                    .text('AAA')
+//                    .append('svg:tspan')
+//                    .text('BBB');
+                    //.text("aaa");
+                    //.append('svg:tspan');
+                focus.select("text").text(formatDiameterValue(d.y));
+//                focus.select("text").append('svg:tspan');
+//                focus.select("text").text(formatMetersValue(d.x));
+//                focus.select("text").append('svg:tspan');
+            }
+
         } catch(err) {
             if (err.name == "SyntaxError") {
                 inputText.placeholder = "Please, provide valid spool ID";
-                if(inputText.classList.contains('input-placeholder')) {
+                if (inputText.classList.contains('input-placeholder')) {
                     inputText.classList.replace('input-placeholder', 'input-placeholder-red');
                 }
                 else {
                     inputText.classList.add('input-placeholder-red');
                 }
-
-//                var attributeButtons = document.getElementsByClassName("tablink");
-//                attributeButtons.parentNode.removeChild(attributeButtons);
             }
             else {
                 console.log(err);

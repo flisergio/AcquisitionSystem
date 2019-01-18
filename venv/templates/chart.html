@@ -10,8 +10,10 @@
 <style>
 .axis path,
 .axis line {
-    fill: none;
-    stroke: black;
+    fill: lightgrey;
+    opacity: 0;
+    stroke: grey;
+    stroke-width: 1;
 }
 
 .line {
@@ -99,7 +101,24 @@ body {font-family: "Lato", sans-serif;}
   text-align: center;
 }
 
-#Diameter {background-color:red; font-size:25px;}
+.overlay {
+  fill: none;
+  pointer-events: all;
+  opacity: 0;
+}
+
+.focus circle {
+  fill: none;
+  stroke: steelblue;
+}
+
+.focus text {
+  fill: none;
+  font-style: Uguntu;
+  font-size: 12px;
+}
+
+#Diameter {background-image: url("Diameter.jpg"); font-size:25px;}
 #Material {background-color:rgb(255,137,0); font-size:25px;}
 #Color {background-color:rgb(255,230,0); font-size:25px;}
 #Mean {background-color:green; font-size:25px;}
