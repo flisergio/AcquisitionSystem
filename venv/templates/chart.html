@@ -7,7 +7,45 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="jQuery.scrollTo.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
 <style>
+
+
+.svg-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    vertical-align: top;
+    overflow: hidden;
+}
+.svg-content {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.header img {
+  float: left;
+  top: 20px;
+  width: auto;
+  height: 120px;
+}
+
+.header h1 {
+  float: left;
+  position: relative;
+  top: 10px;
+  left: 100px;
+}
+
+body {
+    background-color: white;
+    margin-left: 75px;
+    margin-right: 100px;
+}
+
 .axis path,
 .axis line {
     fill: lightgrey;
@@ -18,7 +56,8 @@
 
 .line {
     fill: none;
-    stroke: rgb(125, 3, 155);
+    stroke: black;
+    opacity: 0.5;
     stroke-width: 3px;
 }
 
@@ -38,7 +77,9 @@
 }
 
 body {
-    background-color: rgb(255, 255, 151);
+    background-color: white;
+    margin-left: 75px;
+    margin-right: 100px;
 }
 body {font-family: "Lato", sans-serif;}
 
@@ -61,7 +102,7 @@ body {font-family: "Lato", sans-serif;}
   cursor: pointer;
   padding: 14px 16px;
   font-size: 18px;
-  width: 25%;
+  width: 14.285%;
 }
 
 .checklink {
@@ -81,7 +122,7 @@ body {font-family: "Lato", sans-serif;}
   cursor: copy;
   padding: 12px 16px;
   font-size: 18px;
-  width: 48.4%;
+  width: 53.3%;
 }
 
 .tablink:hover {
@@ -96,6 +137,7 @@ body {font-family: "Lato", sans-serif;}
 
 .tabcontent {
   color: white;
+  float: center;
   display: none;
   padding: 50px;
   text-align: center;
@@ -125,13 +167,16 @@ body {font-family: "Lato", sans-serif;}
 #Ovality {background-color:rgb(0,222,255); font-size:25px;}
 #Deviation {background-color:blue; font-size:25px;}
 #Date {background-color:purple; font-size:25px;}
+
 </style>
 <body>
-    <h1>FINDING SPOOL AND ITS CHARACTERISTICS BY ID</h1>
+    <div class="header">
+      <img src="images/logo-test.png" alt="logo" />
+    </div>
     <script src="chart.js"></script>
-    <input class="textlink" type="text" id="myText" placeholder="Provide spool ID">
-    <button class="checklink" onclick="clickEvent();">Check this number</button>
-    <br><br><br>
+    <input class="textlink" type="text" id="myText" placeholder="Provide spool ID" >
+    <button class="checklink" onclick="clickEvent();">Check</button>
+    <br><br><br><br><br><br><br>
 
     <div id="Diameter" class="tabcontent">
         <h1>Diameter</h1>
@@ -160,13 +205,5 @@ body {font-family: "Lato", sans-serif;}
     <div id="Date" class="tabcontent">
       <h1>Date of production</h1>
     </div>
-
-    <div class="graph">
-
-    </div>
-
-    <script>
-        mainHeader();
-    </script>
 </body>
 </html>

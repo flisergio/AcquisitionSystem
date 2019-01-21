@@ -2,10 +2,9 @@ function mainHeader() {
     d3.select('h1').style('color', 'black')
     .attr('class', 'heading')
     .style('font-size', '50px')
-    .style('font-family', 'Uguntu')
+    .style('font-family', 'Ubuntu')
     .style('text-align', 'center')
-    .style('text-decoration', 'underline')
-    .style('text-decoration-style', 'solid');
+    .style('text-decoration', 'underline');
 }
 
 function openParameter(parameterName, element, color) {
@@ -27,61 +26,54 @@ function openParameter(parameterName, element, color) {
 }
 
 function createButtons() {
-    var buttonGraph = document.createElement("button");
-    var buttonGraphText = document.createTextNode("Go to graph");
-    buttonGraph.id = "defaultOpen";
-    buttonGraph.className = "tablink";
-    buttonGraph.appendChild(buttonGraphText);
-    buttonGraph.setAttribute("onClick", "$('html, body').animate({scrollTop:$(document).height()}, 'slow')");
-    document.body.appendChild(buttonGraph);
-
     var buttonDiameter = document.createElement("button");
     var buttonDiameterText = document.createTextNode("Diameter");
+    buttonDiameter.id = "defaultOpen";
     buttonDiameter.className = "tablink";
     buttonDiameter.appendChild(buttonDiameterText);
-    buttonDiameter.setAttribute("onClick", "openParameter('Diameter', this, 'red'); $('html, body').animate({scrollTop: 120}, 'medium')");
+    buttonDiameter.setAttribute("onClick", "openParameter('Diameter', this, 'red'); $('html, body').animate({scrollTop: 0}, 'medium')");
     document.body.appendChild(buttonDiameter);
 
     var buttonMaterial = document.createElement("button");
     var buttonMaterialText = document.createTextNode("Material");
     buttonMaterial.className = "tablink";
     buttonMaterial.appendChild(buttonMaterialText);
-    buttonMaterial.setAttribute("onClick", "openParameter('Material', this, 'rgb(255,137,0)'); $('html, body').animate({scrollTop: 120}, 'medium')");
+    buttonMaterial.setAttribute("onClick", "openParameter('Material', this, 'rgb(255,137,0)'); $('html, body').animate({scrollTop: 0}, 'medium')");
     document.body.appendChild(buttonMaterial);
 
     var buttonColor = document.createElement("button");
     var buttonColorText = document.createTextNode("Color");
     buttonColor.className = "tablink";
     buttonColor.appendChild(buttonColorText);
-    buttonColor.setAttribute("onClick", "openParameter('Color', this, 'rgb(255,230,0)'); $('html, body').animate({scrollTop: 120}, 'medium')");
+    buttonColor.setAttribute("onClick", "openParameter('Color', this, 'rgb(255,230,0)'); $('html, body').animate({scrollTop: 0}, 'medium')");
     document.body.appendChild(buttonColor);
 
     var buttonMean = document.createElement("button");
     var buttonMeanText = document.createTextNode("Mean");
     buttonMean.className = "tablink";
     buttonMean.appendChild(buttonMeanText);
-    buttonMean.setAttribute("onClick", "openParameter('Mean', this, 'green'); $('html, body').animate({scrollTop: 120}, 'medium')");
+    buttonMean.setAttribute("onClick", "openParameter('Mean', this, 'green'); $('html, body').animate({scrollTop: 0}, 'medium')");
     document.body.appendChild(buttonMean);
 
     var buttonOvality = document.createElement("button");
     var buttonOvalityText = document.createTextNode("Ovality");
     buttonOvality.className = "tablink";
     buttonOvality.appendChild(buttonOvalityText);
-    buttonOvality.setAttribute("onClick", "openParameter('Ovality', this, 'rgb(0,222,255)'); $('html, body').animate({scrollTop: 120}, 'medium')");
+    buttonOvality.setAttribute("onClick", "openParameter('Ovality', this, 'rgb(0,222,255)'); $('html, body').animate({scrollTop: 0}, 'medium')");
     document.body.appendChild(buttonOvality);
 
     var buttonDeviation = document.createElement("button");
     var buttonDeviationText = document.createTextNode("Deviation");
     buttonDeviation.className = "tablink";
     buttonDeviation.appendChild(buttonDeviationText);
-    buttonDeviation.setAttribute("onClick", "openParameter('Deviation', this, 'blue'); $('html, body').animate({scrollTop: 120}, 'medium')");
+    buttonDeviation.setAttribute("onClick", "openParameter('Deviation', this, 'blue'); $('html, body').animate({scrollTop: 0}, 'medium')");
     document.body.appendChild(buttonDeviation);
 
     var buttonDate = document.createElement("button");
     var buttonDateText = document.createTextNode("Date");
     buttonDate.className = "tablink";
     buttonDate.appendChild(buttonDateText);
-    buttonDate.setAttribute("onClick", "openParameter('Date', this, 'purple'); $('html, body').animate({scrollTop: 120}, 'medium')");
+    buttonDate.setAttribute("onClick", "openParameter('Date', this, 'purple'); $('html, body').animate({scrollTop: 0}, 'medium')");
     document.body.appendChild(buttonDate);
 }
 
@@ -179,7 +171,7 @@ function myFunction() {
 
             document.getElementById("defaultOpen").click();
 
-            var margin = {top: 20, right: 100, bottom: 30, left: 100},
+            var margin = {top: 50, right: 150, bottom: 30, left: 50},
             width = 1500 - margin.left - margin.right,
             height = 250 - margin.top - margin.bottom;
             rawData = LabX.map(function(d, i){
@@ -310,17 +302,7 @@ function myFunction() {
                     d1 = rawData[i],
                     d = x0 - d0.x > d1.x - x0 ? d1 : d0;
                 focus.attr("transform", "translate(" + scaleX(d.x) + "," + scaleY(d.y) + ")");
-//                focus.select('text')
-                    //.append('svg:tspan')
-//                    .text('AAA')
-//                    .append('svg:tspan')
-//                    .text('BBB');
-                    //.text("aaa");
-                    //.append('svg:tspan');
                 focus.select("text").text(formatDiameterValue(d.y));
-//                focus.select("text").append('svg:tspan');
-//                focus.select("text").text(formatMetersValue(d.x));
-//                focus.select("text").append('svg:tspan');
             }
 
         } catch(err) {
