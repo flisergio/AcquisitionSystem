@@ -97,10 +97,9 @@ function myFunction() {
     }
 
     xmlhttp.onreadystatechange = function() {
-        removeElements();
         try {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                var my_x = JSON.parse(xmlhttp.responseText);
+                var my_data = JSON.parse(xmlhttp.responseText);
 
                 LabX = my_data.labelY;
                 LabY = my_data.labelX;
@@ -132,6 +131,9 @@ function myFunction() {
                 var xm = (LabX.length / 10) + (LabX.length / 1000);
             }
 
+            removeElements();
+            createButtons(myColor);
+            
             appendClassHeader(0, my_data.diameter + " milimiters");
             appendClassHeader(1, my_data.material);
             appendClassHeader(2, my_data.color + my_data.ral);
@@ -320,9 +322,6 @@ function myFunction() {
                 focus.attr("transform", "translate(" + scaleX(d.x) + "," + scaleY(d.y) + ")");
                 focus.select("text").text(formatDiameterValue(d.y));
             }
-
-            createButtons(myColor);
-
 
         } catch(err) {
             if (err.name == "SyntaxError") {
