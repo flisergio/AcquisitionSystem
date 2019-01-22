@@ -1,10 +1,6 @@
-function mainHeader() {
-    d3.select('h1').style('color', 'black')
-    .attr('class', 'heading')
-    .style('font-size', '50px')
-    .style('font-family', 'Ubuntu')
-    .style('text-align', 'center')
-    .style('text-decoration', 'underline');
+function appendClassHeader(classIndex, text) {
+    document.getElementsByClassName("tabcontent")[classIndex]
+        .getElementsByTagName('h1')[0].innerHTML = text;
 }
 
 function openParameter(parameterName, element, color) {
@@ -25,7 +21,7 @@ function openParameter(parameterName, element, color) {
   element.style.backgroundColor = color;
 }
 
-function createButtons() {
+function createButtons(myColor) {
     var buttonDiameter = document.createElement("button");
     var buttonDiameterText = document.createTextNode("Diameter");
     buttonDiameter.id = "defaultOpen";
@@ -45,7 +41,7 @@ function createButtons() {
     var buttonColorText = document.createTextNode("Color");
     buttonColor.className = "tablink";
     buttonColor.appendChild(buttonColorText);
-    buttonColor.setAttribute("onClick", "openParameter('Color', this, 'rgb(255,230,0)'); $('html, body').animate({scrollTop: 0}, 'medium')");
+    buttonColor.setAttribute("onClick", "openParameter('Color', this, '" + myColor + "'); $('html, body').animate({scrollTop: 0}, 'medium')");
     document.body.appendChild(buttonColor);
 
     var buttonMean = document.createElement("button");
@@ -88,6 +84,7 @@ function myFunction() {
     var xmlhttp = new XMLHttpRequest();
     var LabY;
     var LabX;
+    var myColor = "rgb(255,230,0)";
 
     var inputText =  document.getElementById("myText");
     inputText.value = "";
@@ -99,13 +96,11 @@ function myFunction() {
         inputText.classList.add('input-placeholder');
     }
 
-    removeElements();
-    createButtons();
-
     xmlhttp.onreadystatechange = function() {
+        removeElements();
         try {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                var my_data = JSON.parse(xmlhttp.responseText);
+                var my_x = JSON.parse(xmlhttp.responseText);
 
                 LabX = my_data.labelY;
                 LabY = my_data.labelX;
@@ -123,55 +118,73 @@ function myFunction() {
                     }
                 }
 
+                if (my_data.color.includes("BLUE")) {
+                    myColor = "blue";
+                }
+
+                else if (my_data.color.includes("RED")) {
+                    myColor = "red";
+                }
+
                 areaMin = my_data.diameter - 0.02;
                 areaMax = my_data.diameter + 0.02;
 
                 var xm = (LabX.length / 10) + (LabX.length / 1000);
             }
 
+            appendClassHeader(0, my_data.diameter + " milimiters");
+            appendClassHeader(1, my_data.material);
+            appendClassHeader(2, my_data.color + my_data.ral);
+            appendClassHeader(3, my_data.mean.toFixed(3) + " milimeters");
+            appendClassHeader(4, (my_data.ovality * 100).toFixed(1) + "%");
+            appendClassHeader(5, (my_data.deviation * 1000).toFixed(1) + " micrometers");
+            appendClassHeader(6, my_data.dateprod);
+
+            document.getElementById("Color").style.backgroundColor = myColor;
+
             var classParagraph = document.createElement("p");
             var selectClassParagraph = document.querySelector("p");
 
             var body = document.querySelector("body");
 
-            var classDiameterParagraph = document.createTextNode(my_data.diameter + " milimeters");
+            var classDiameterParagraph = document.createTextNode("Diameter");
             classParagraph.appendChild(classDiameterParagraph);
             var classDiameter = document.getElementById("Diameter");
             classDiameter.replaceChild(classDiameterParagraph, classDiameter.childNodes[0]);
 
-            var classMaterialParagraph = document.createTextNode(my_data.material);
+            var classMaterialParagraph = document.createTextNode("Material");
             classParagraph.appendChild(classMaterialParagraph);
             var classMaterial = document.getElementById("Material");
             classMaterial.replaceChild(classMaterialParagraph, classMaterial.childNodes[0]);
 
-            var classColorParagraph = document.createTextNode(my_data.color);
+            var classColorParagraph = document.createTextNode("Color");
             classParagraph.appendChild(classColorParagraph);
             var classColor = document.getElementById("Color");
             classColor.replaceChild(classColorParagraph, classColor.childNodes[0]);
 
-            var classMeanParagraph = document.createTextNode(my_data.mean.toFixed(3) + " milimeters");
+            var classMeanParagraph = document.createTextNode("Mean diameter");
             classParagraph.appendChild(classMeanParagraph);
             var classMean = document.getElementById("Mean");
             classMean.replaceChild(classMeanParagraph, classMean.childNodes[0]);
 
-            var classOvalityParagraph = document.createTextNode((my_data.ovality * 100).toFixed(1) + "%");
+            var classOvalityParagraph = document.createTextNode("Ovality");
             classParagraph.appendChild(classOvalityParagraph);
             var classOvality = document.getElementById("Ovality");
             classOvality.replaceChild(classOvalityParagraph, classOvality.childNodes[0]);
 
-            var classDeviationParagraph = document.createTextNode((my_data.deviation * 1000).toFixed(1) + " micrometers");
+            var classDeviationParagraph = document.createTextNode("Standard deviation");
             classParagraph.appendChild(classDeviationParagraph);
             var classDeviation = document.getElementById("Deviation");
             classDeviation.replaceChild(classDeviationParagraph, classDeviation.childNodes[0]);
 
-            var classDateParagraph = document.createTextNode(my_data.dateprod);
+            var classDateParagraph = document.createTextNode("Date of production");
             classParagraph.appendChild(classDateParagraph);
             var classDate = document.getElementById("Date");
             classDate.replaceChild(classDateParagraph, classDate.childNodes[0]);
 
             document.getElementById("defaultOpen").click();
 
-            var margin = {top: 50, right: 150, bottom: 30, left: 50},
+            var margin = {top: 30, right: 150, bottom: 30, left: 35},
             width = 1500 - margin.left - margin.right,
             height = 250 - margin.top - margin.bottom;
             rawData = LabX.map(function(d, i){
@@ -193,15 +206,18 @@ function myFunction() {
                 }
             }
 
-
-            var svg = d3.select("body").append("svg")
-                    .attr("width", width + margin.left + margin.right)
-                    .attr("height", height + margin.top + margin.bottom)
+            var svg = d3.select("body")
+                    .append("div")
+                    .classed("svg-container", true)
+                    .append("svg")
+                    .attr("preserveAspectRatio", "xMinYMin meet")
+                    .attr("viewBox", "0 0 " + width + " " + (height + margin.top + margin.bottom))
+                    .classed("svg-content-responsive", true)
               .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
                     .style("stroke", "black")
                     .style("stroke-width", 1)
-                    .style("fill", "none") 
+                    .style("fill", "none"); 
 
             var scaleX = d3.scale.linear()
                         .domain([0, xm])
@@ -304,6 +320,9 @@ function myFunction() {
                 focus.attr("transform", "translate(" + scaleX(d.x) + "," + scaleY(d.y) + ")");
                 focus.select("text").text(formatDiameterValue(d.y));
             }
+
+            createButtons(myColor);
+
 
         } catch(err) {
             if (err.name == "SyntaxError") {

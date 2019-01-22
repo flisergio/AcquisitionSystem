@@ -10,19 +10,18 @@
     <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
 <style>
 
-
 .svg-container {
     display: inline-block;
     position: relative;
     width: 100%;
-    padding-bottom: 100%;
+    padding-bottom: 20%;
     vertical-align: top;
     overflow: hidden;
 }
-.svg-content {
+.svg-content-responsive {
     display: inline-block;
     position: absolute;
-    top: 0;
+    top: 10px;
     left: 0;
 }
 
@@ -30,14 +29,11 @@
   float: left;
   top: 20px;
   width: auto;
-  height: 120px;
+  height: 100px;
 }
 
-.header h1 {
-  float: left;
-  position: relative;
-  top: 10px;
-  left: 100px;
+h1 {
+    height: 200;
 }
 
 body {
@@ -77,11 +73,12 @@ body {
 }
 
 body {
+    max-height: 10px;
     background-color: white;
     margin-left: 75px;
     margin-right: 100px;
 }
-body {font-family: "Lato", sans-serif;}
+body {font-family: "Ubuntu", sans-serif;}
 
 .input-placeholder::-webkit-input-placeholder {
     color: black;
@@ -101,6 +98,7 @@ body {font-family: "Lato", sans-serif;}
   outline: none;
   cursor: pointer;
   padding: 14px 16px;
+  font-family: Ubuntu;
   font-size: 18px;
   width: 14.285%;
 }
@@ -108,21 +106,26 @@ body {font-family: "Lato", sans-serif;}
 .checklink {
   background-color: #555;
   color: white;
-  float: left;
+  float: right;
   border: none;
   cursor: pointer;
+  margin-top: 35px;
   padding: 14px 16px;
+  font-family: Ubuntu;
   font-size: 18px;
-  width: 25%;
+  width: 15%;
 }
 
 .textlink {
   background-color: white;
-  float: left;
+  float: right;
   cursor: copy;
+  margin-top: 35px;
   padding: 12px 16px;
+  font-family: Ubuntu;
   font-size: 18px;
-  width: 53.3%;
+  width: 40%;
+  height: 10%;
 }
 
 .tablink:hover {
@@ -140,7 +143,7 @@ body {font-family: "Lato", sans-serif;}
   float: center;
   display: none;
   padding: 50px;
-  text-align: center;
+  text-align: left;
 }
 
 .overlay {
@@ -156,7 +159,6 @@ body {font-family: "Lato", sans-serif;}
 
 .focus text {
   fill: none;
-  font-style: Uguntu;
   font-size: 12px;
 }
 
@@ -174,12 +176,12 @@ body {font-family: "Lato", sans-serif;}
       <img src="images/logo-test.png" alt="logo" />
     </div>
     <script src="chart.js"></script>
-    <input class="textlink" type="text" id="myText" placeholder="Provide spool ID" >
     <button class="checklink" onclick="clickEvent();">Check</button>
+    <input class="textlink" type="text" id="myText" placeholder="Provide spool ID" >
     <br><br><br><br><br><br><br>
 
     <div id="Diameter" class="tabcontent">
-        <h1>Diameter</h1>
+        <h1></h1>
     </div>
 
     <div id="Material" class="tabcontent">
@@ -205,5 +207,9 @@ body {font-family: "Lato", sans-serif;}
     <div id="Date" class="tabcontent">
       <h1>Date of production</h1>
     </div>
+
+    <script>
+        paragraphProperties();
+    </script>
 </body>
 </html>
