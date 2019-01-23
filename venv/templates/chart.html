@@ -39,7 +39,7 @@ h1 {
 body {
     background-color: white;
     margin-left: 75px;
-    margin-right: 100px;
+    margin-right: 75px;
 }
 
 .axis path,
@@ -139,11 +139,22 @@ body {font-family: "Ubuntu", sans-serif;}
 }
 
 .tabcontent {
+  position: relative;
   color: white;
   float: center;
   display: none;
   padding: 50px;
   text-align: left;
+}
+
+.tabcontent .descr {
+    position: absolute;
+    top: 50px;
+    right: 100px;
+    text-align: center;
+    float: right;
+    font-family: Ubuntu;
+    font-size: 14px;
 }
 
 .overlay {
@@ -162,7 +173,7 @@ body {font-family: "Ubuntu", sans-serif;}
   font-size: 12px;
 }
 
-#Diameter {background-image: url("Diameter.jpg"); font-size:25px;}
+#Diameter {background-color:red; /*background-image: url("Diameter.jpg");*/ font-size:25px;}
 #Material {background-color:rgb(255,137,0); font-size:25px;}
 #Color {background-color:rgb(255,230,0); font-size:25px;}
 #Mean {background-color:green; font-size:25px;}
@@ -185,27 +196,27 @@ body {font-family: "Ubuntu", sans-serif;}
     </div>
 
     <div id="Material" class="tabcontent">
-      <h1>Material</h1>
+        <h1></h1>
     </div>
 
     <div id="Color" class="tabcontent">
-      <h1>Color</h1>
+        <h1></h1>
     </div>
 
     <div id="Mean" class="tabcontent">
-      <h1>Mean diameter</h1>
+        <h1></h1>
     </div>
 
     <div id="Ovality" class="tabcontent">
-      <h1>Ovality</h1>
+        <h1></h1>
     </div>
 
     <div id="Deviation" class="tabcontent">
-      <h1>Standard deviation</h1>
+        <h1></h1>
     </div>
 
     <div id="Date" class="tabcontent">
-      <h1>Date of production</h1>
+        <h1></h1>
     </div>
 
     <script>

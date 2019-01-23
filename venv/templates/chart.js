@@ -118,7 +118,13 @@ function myFunction() {
                 }
 
                 if (my_data.color.includes("BLUE")) {
-                    myColor = "blue";
+                    if(my_data.color.includes("NAVY")) {
+                        myColor = "rgb(0, 0, 128)";
+                    }
+                    else
+                    {
+                        myColor = "blue";
+                    }
                 }
 
                 else if (my_data.color.includes("RED")) {
@@ -133,10 +139,10 @@ function myFunction() {
 
             removeElements();
             createButtons(myColor);
-            
+
             appendClassHeader(0, my_data.diameter + " milimiters");
             appendClassHeader(1, my_data.material);
-            appendClassHeader(2, my_data.color + my_data.ral);
+            appendClassHeader(2, my_data.color + " | " + my_data.ral);
             appendClassHeader(3, my_data.mean.toFixed(3) + " milimeters");
             appendClassHeader(4, (my_data.ovality * 100).toFixed(1) + "%");
             appendClassHeader(5, (my_data.deviation * 1000).toFixed(1) + " micrometers");
@@ -145,44 +151,69 @@ function myFunction() {
             document.getElementById("Color").style.backgroundColor = myColor;
 
             var classParagraph = document.createElement("p");
-            var selectClassParagraph = document.querySelector("p");
-
-            var body = document.querySelector("body");
 
             var classDiameterParagraph = document.createTextNode("Diameter");
-            classParagraph.appendChild(classDiameterParagraph);
             var classDiameter = document.getElementById("Diameter");
+            var descriptionDiameter = document.createElement("div");
+            classParagraph.appendChild(classDiameterParagraph);
             classDiameter.replaceChild(classDiameterParagraph, classDiameter.childNodes[0]);
+            descriptionDiameter.className = "descr";
+            descriptionDiameter.innerHTML = "Diameter shows<br>how is<br>it going";
+            classDiameter.appendChild(descriptionDiameter);
 
             var classMaterialParagraph = document.createTextNode("Material");
-            classParagraph.appendChild(classMaterialParagraph);
             var classMaterial = document.getElementById("Material");
+            var descriptionMaterial = document.createElement("div");
+            classParagraph.appendChild(classMaterialParagraph);
             classMaterial.replaceChild(classMaterialParagraph, classMaterial.childNodes[0]);
+            descriptionMaterial.className = "descr";
+            descriptionMaterial.innerHTML = "Material shows<br>from what is<br>it going";
+            classMaterial.appendChild(descriptionMaterial);
 
-            var classColorParagraph = document.createTextNode("Color");
-            classParagraph.appendChild(classColorParagraph);
+            var classColorParagraph = document.createTextNode("Color | ColorRAL");
             var classColor = document.getElementById("Color");
+            var descriptionColor = document.createElement("div");
+            classParagraph.appendChild(classColorParagraph);
             classColor.replaceChild(classColorParagraph, classColor.childNodes[0]);
+            descriptionColor.className = "descr";
+            descriptionColor.innerHTML = "Color shows<br>style when is<br>it going";
+            classColor.appendChild(descriptionColor);
 
             var classMeanParagraph = document.createTextNode("Mean diameter");
-            classParagraph.appendChild(classMeanParagraph);
             var classMean = document.getElementById("Mean");
+            var descriptionMean = document.createElement("div");
+            classParagraph.appendChild(classMeanParagraph);
             classMean.replaceChild(classMeanParagraph, classMean.childNodes[0]);
+            descriptionMean.className = "descr";
+            descriptionMean.innerHTML = "Mean diameter shows<br>how exactly is<br>it going";
+            classMean.appendChild(descriptionMean);
 
             var classOvalityParagraph = document.createTextNode("Ovality");
-            classParagraph.appendChild(classOvalityParagraph);
             var classOvality = document.getElementById("Ovality");
+            var descriptionOvality = document.createElement("div");
+            classParagraph.appendChild(classOvalityParagraph);
             classOvality.replaceChild(classOvalityParagraph, classOvality.childNodes[0]);
+            descriptionOvality.className = "descr";
+            descriptionOvality.innerHTML = "Ovality shows<br>how oval is<br>it going";
+            classOvality.appendChild(descriptionOvality);
 
             var classDeviationParagraph = document.createTextNode("Standard deviation");
-            classParagraph.appendChild(classDeviationParagraph);
             var classDeviation = document.getElementById("Deviation");
+            var descriptionDeviation = document.createElement("div");
+            classParagraph.appendChild(classDeviationParagraph);
             classDeviation.replaceChild(classDeviationParagraph, classDeviation.childNodes[0]);
+            descriptionDeviation.className = "descr";
+            descriptionDeviation.innerHTML = "Standard deviation shows<br>how good is<br>it going";
+            classDeviation.appendChild(descriptionDeviation);
 
             var classDateParagraph = document.createTextNode("Date of production");
-            classParagraph.appendChild(classDateParagraph);
             var classDate = document.getElementById("Date");
+            var descriptionDate = document.createElement("div");
+            classParagraph.appendChild(classDateParagraph);
             classDate.replaceChild(classDateParagraph, classDate.childNodes[0]);
+            descriptionDate.className = "descr";
+            descriptionDate.innerHTML = "Date shows<br>when is<br>it going";
+            classDate.appendChild(descriptionDate);
 
             document.getElementById("defaultOpen").click();
 
