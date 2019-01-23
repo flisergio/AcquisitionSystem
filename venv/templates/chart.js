@@ -5,7 +5,7 @@ function appendClassHeader(classIndex, text) {
 
 function openParameter(parameterName, element, color) {
   var i, tabcontent, tablinks;
-  
+
   tabcontent = document.getElementsByClassName("tabcontent");
 
   for (i = 0; i < tabcontent.length; i++) {
@@ -76,6 +76,7 @@ function createButtons(myColor) {
 
 function removeElements() {
     $(".tablink").remove();
+    $(".tabcontent").innerHTML = "";
     $(".svg-container").remove();
     d3.select("svg").remove();
 }
