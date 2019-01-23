@@ -5,6 +5,7 @@ function appendClassHeader(classIndex, text) {
 
 function openParameter(parameterName, element, color) {
   var i, tabcontent, tablinks;
+  
   tabcontent = document.getElementsByClassName("tabcontent");
 
   for (i = 0; i < tabcontent.length; i++) {
