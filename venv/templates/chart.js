@@ -75,6 +75,7 @@ function createButtons(myColor) {
 
 function removeElements() {
     $(".tablink").remove();
+    $(".svg-container").remove();
     d3.select("svg").remove();
 }
 
