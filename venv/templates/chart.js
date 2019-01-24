@@ -1,3 +1,11 @@
+$(document).ready(function(){
+    $('#myText').keypress(function(e){
+      if(e.keyCode==13)
+      $('#startButton').click();
+      return false;
+    });
+});
+
 function appendClassHeader(classIndex, text) {
     document.getElementsByClassName("tabcontent")[classIndex]
         .getElementsByTagName('h1')[0].innerHTML = text;
@@ -148,73 +156,120 @@ function myFunction() {
             appendClassHeader(3, my_data.mean.toFixed(3) + " milimeters");
             appendClassHeader(4, (my_data.ovality * 100).toFixed(1) + "%");
             appendClassHeader(5, (my_data.deviation * 1000).toFixed(1) + " micrometers");
-            appendClassHeader(6, my_data.dateprod);
+            appendClassHeader(6, my_data.dateprod.substring(0, my_data.dateprod.length-9));
 
             document.getElementById("Color").style.backgroundColor = myColor;
 
-            var classParagraph = document.createElement("p");
-
-            var classDiameterParagraph = document.createTextNode("Diameter");
             var classDiameter = document.getElementById("Diameter");
+            var diameterParagraph = document.createElement("div");
             var descriptionDiameter = document.createElement("div");
-            classParagraph.appendChild(classDiameterParagraph);
-            classDiameter.replaceChild(classDiameterParagraph, classDiameter.childNodes[0]);
+            diameterParagraph.innerHTML = "Diameter";
+            diameterParagraph.className = "parag";
+            descriptionDiameter.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do <br>" +
+                                            "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut <br>" +
+                                            "enim ad minim veniam, quis nostrud exercitation ullamco laboris <br>" +
+                                            "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in <br>" +
+                                            "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla <br>" +
+                                            "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in <br>" +
+                                            "culpa qui officia deserunt mollit anim id est laborum.";
             descriptionDiameter.className = "descr";
-            descriptionDiameter.innerHTML = "Diameter shows<br>how is<br>it going";
+            classDiameter.appendChild(diameterParagraph);
             classDiameter.appendChild(descriptionDiameter);
 
-            var classMaterialParagraph = document.createTextNode("Material");
             var classMaterial = document.getElementById("Material");
+            var materialParagraph = document.createElement("div");
             var descriptionMaterial = document.createElement("div");
-            classParagraph.appendChild(classMaterialParagraph);
-            classMaterial.replaceChild(classMaterialParagraph, classMaterial.childNodes[0]);
+            materialParagraph.innerHTML = "Material";
+            materialParagraph.className = "parag";
+            descriptionMaterial.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do <br>" +
+                                            "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut <br>" +
+                                            "enim ad minim veniam, quis nostrud exercitation ullamco laboris <br>" +
+                                            "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in <br>" +
+                                            "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla <br>" +
+                                            "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in <br>" +
+                                            "culpa qui officia deserunt mollit anim id est laborum.";
             descriptionMaterial.className = "descr";
-            descriptionMaterial.innerHTML = "Material shows<br>from what is<br>it going";
+            classMaterial.appendChild(materialParagraph);
             classMaterial.appendChild(descriptionMaterial);
 
-            var classColorParagraph = document.createTextNode("Color | ColorRAL");
             var classColor = document.getElementById("Color");
+            var colorParagraph = document.createElement("div");
             var descriptionColor = document.createElement("div");
-            classParagraph.appendChild(classColorParagraph);
-            classColor.replaceChild(classColorParagraph, classColor.childNodes[0]);
+            colorParagraph.innerHTML = "Color | ColorRAL";
+            colorParagraph.className = "parag";
+            descriptionColor.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do <br>" +
+                                        "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut <br>" +
+                                        "enim ad minim veniam, quis nostrud exercitation ullamco laboris <br>" +
+                                        "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in <br>" +
+                                        "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla <br>" +
+                                        "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in <br>" +
+                                        "culpa qui officia deserunt mollit anim id est laborum.";
             descriptionColor.className = "descr";
-            descriptionColor.innerHTML = "Color shows<br>style when is<br>it going";
+            classColor.appendChild(colorParagraph);
             classColor.appendChild(descriptionColor);
 
-            var classMeanParagraph = document.createTextNode("Mean diameter");
             var classMean = document.getElementById("Mean");
+            var meanParagraph = document.createElement("div");
             var descriptionMean = document.createElement("div");
-            classParagraph.appendChild(classMeanParagraph);
-            classMean.replaceChild(classMeanParagraph, classMean.childNodes[0]);
+            meanParagraph.innerHTML = "Mean diameter";
+            meanParagraph.className = "parag";
+            descriptionMean.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do <br>" +
+                                        "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut <br>" +
+                                        "enim ad minim veniam, quis nostrud exercitation ullamco laboris <br>" +
+                                        "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in <br>" +
+                                        "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla <br>" +
+                                        "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in <br>" +
+                                        "culpa qui officia deserunt mollit anim id est laborum.";
             descriptionMean.className = "descr";
-            descriptionMean.innerHTML = "Mean diameter shows<br>how exactly is<br>it going";
+            classMean.appendChild(meanParagraph);
             classMean.appendChild(descriptionMean);
 
-            var classOvalityParagraph = document.createTextNode("Ovality");
             var classOvality = document.getElementById("Ovality");
+            var ovalityParagraph = document.createElement("div");
             var descriptionOvality = document.createElement("div");
-            classParagraph.appendChild(classOvalityParagraph);
-            classOvality.replaceChild(classOvalityParagraph, classOvality.childNodes[0]);
+            ovalityParagraph.innerHTML = "Ovality";
+            ovalityParagraph.className = "parag";
+            descriptionOvality.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do <br>" +
+                                           "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut <br>" +
+                                           "enim ad minim veniam, quis nostrud exercitation ullamco laboris <br>" +
+                                           "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in <br>" +
+                                           "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla <br>" +
+                                           "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in <br>" +
+                                           "culpa qui officia deserunt mollit anim id est laborum.";
             descriptionOvality.className = "descr";
-            descriptionOvality.innerHTML = "Ovality shows<br>how oval is<br>it going";
+            classOvality.appendChild(ovalityParagraph);
             classOvality.appendChild(descriptionOvality);
 
-            var classDeviationParagraph = document.createTextNode("Standard deviation");
             var classDeviation = document.getElementById("Deviation");
+            var deviationParagraph = document.createElement("div");
             var descriptionDeviation = document.createElement("div");
-            classParagraph.appendChild(classDeviationParagraph);
-            classDeviation.replaceChild(classDeviationParagraph, classDeviation.childNodes[0]);
+            deviationParagraph.innerHTML = "Standard deviation";
+            deviationParagraph.className = "parag";
+            descriptionDeviation.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do <br>" +
+                                             "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut <br>" +
+                                             "enim ad minim veniam, quis nostrud exercitation ullamco laboris <br>" +
+                                             "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in <br>" +
+                                             "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla <br>" +
+                                             "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in <br>" +
+                                             "culpa qui officia deserunt mollit anim id est laborum.";
             descriptionDeviation.className = "descr";
-            descriptionDeviation.innerHTML = "Standard deviation shows<br>how good is<br>it going";
+            classDeviation.appendChild(deviationParagraph);
             classDeviation.appendChild(descriptionDeviation);
 
-            var classDateParagraph = document.createTextNode("Date of production");
             var classDate = document.getElementById("Date");
+            var dateParagraph = document.createElement("div");
             var descriptionDate = document.createElement("div");
-            classParagraph.appendChild(classDateParagraph);
-            classDate.replaceChild(classDateParagraph, classDate.childNodes[0]);
+            dateParagraph.innerHTML = "Date of production";
+            dateParagraph.className = "parag";
+            descriptionDate.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do <br>" +
+                                        "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut <br>" +
+                                        "enim ad minim veniam, quis nostrud exercitation ullamco laboris <br>" +
+                                        "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in <br>" +
+                                        "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla <br>" +
+                                        "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in <br>" +
+                                        "culpa qui officia deserunt mollit anim id est laborum.";
             descriptionDate.className = "descr";
-            descriptionDate.innerHTML = "Date shows<br>when is<br>it going";
+            classDate.appendChild(dateParagraph);
             classDate.appendChild(descriptionDate);
 
             document.getElementById("defaultOpen").click();

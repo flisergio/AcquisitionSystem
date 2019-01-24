@@ -18,6 +18,7 @@
     vertical-align: top;
     overflow: hidden;
 }
+
 .svg-content-responsive {
     display: inline-block;
     position: absolute;
@@ -53,7 +54,7 @@ body {
 
 .line {
     fill: none;
-    stroke: black;
+    stroke: #0DB7CB;
     opacity: 0.5;
     stroke-width: 3px;
 }
@@ -79,7 +80,8 @@ body {
     margin-left: 10%;
     margin-right: 10%;
 }
-body {font-family: "Ubuntu", sans-serif;}
+
+body { font-family: "Ubuntu", sans-serif; }
 
 .input-placeholder::-webkit-input-placeholder {
     color: black;
@@ -92,6 +94,7 @@ body {font-family: "Ubuntu", sans-serif;}
 }
 
 .tablink {
+  position: relative;
   background-color: #555;
   color: white;
   float: left;
@@ -147,15 +150,28 @@ body {font-family: "Ubuntu", sans-serif;}
   display: none;
   padding: 50px;
   text-align: left;
-  height: 90px;
+  height: 50px;
+}
+
+.tabcontent .hdr {
+    position: absolute;
+    bottom: 0px;
+}
+
+.tabcontent .parag {
+    position: absolute;
+    font-family: Ubuntu;
+    font-size: 22px;
+    top: 30px;
+    text-align: center;
 }
 
 .tabcontent .descr {
     position: absolute;
     top: 20px;
-    right: 6%;
     text-align: center;
-    float: right;
+    float: left;
+    left: 60%;
     font-family: Ubuntu;
     font-size: 14px;
 }
@@ -187,39 +203,53 @@ body {font-family: "Ubuntu", sans-serif;}
 </style>
 <body>
     <div class="header">
-        <a href="https://spectrumfilaments.com/"><img src="images/logo-test.png" alt="logo" /></a>
+        <a href="https://spectrumfilaments.com/"><img src="logo.png" alt="logo" /></a>
     </div>
     <script src="chart.js"></script>
-    <button class="checklink" onclick="clickEvent();">Check</button>
+    <button class="checklink" id="startButton" onclick="clickEvent();">Check</button>
     <input class="textlink" type="text" id="myText" placeholder="Provide spool ID" >
     <br><br><br><br><br><br><br>
 
     <div id="Diameter" class="tabcontent">
-        <h1></h1>
+        <div class="hdr">
+            <h1></h1>
+        </div>
     </div>
 
     <div id="Material" class="tabcontent">
-        <h1></h1>
+        <div class="hdr">
+            <h1></h1>
+        </div>
     </div>
 
     <div id="Color" class="tabcontent">
-        <h1></h1>
+        <div class="hdr">
+            <h1></h1>
+        </div>
     </div>
 
     <div id="Mean" class="tabcontent">
-        <h1></h1>
+        <div class="hdr">
+            <h1></h1>
+        </div>
     </div>
 
     <div id="Ovality" class="tabcontent">
-        <h1></h1>
+        <div class="hdr">
+            <h1></h1>
+        </div>
     </div>
 
     <div id="Deviation" class="tabcontent">
-        <h1></h1>
+        <div class="hdr">
+            <h1></h1>
+        </div>
     </div>
 
     <div id="Date" class="tabcontent">
-        <h1></h1>
+        <div class="hdr">
+            <h1></h1>
+        </div>
     </div>
 
     <script>
