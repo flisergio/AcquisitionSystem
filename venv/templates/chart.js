@@ -1,10 +1,12 @@
-$(document).ready(function(){
-    $('#myText').keypress(function(e){
-      if(e.keyCode==13)
-      $('#startButton').click();
-      return false;
+function initHTML() {
+    var input = document.getElementById("myText");
+    input.addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+        document.getElementById("startButton").click();
+        }
     });
-});
+}
 
 function appendClassHeader(classIndex, text) {
     document.getElementsByClassName("tabcontent")[classIndex]
@@ -94,7 +96,7 @@ function myFunction() {
     var xmlhttp = new XMLHttpRequest();
     var LabY;
     var LabX;
-    var myColor = "rgb(255,230,0)";
+    var myColor;
 
     var inputText =  document.getElementById("myText");
     inputText.value = "";
@@ -150,12 +152,12 @@ function myFunction() {
             removeElements();
             createButtons(myColor);
 
-            appendClassHeader(0, my_data.diameter + " milimiters");
+            appendClassHeader(0, my_data.diameter + " mm");
             appendClassHeader(1, my_data.material);
             appendClassHeader(2, my_data.color + " | " + my_data.ral);
-            appendClassHeader(3, my_data.mean.toFixed(3) + " milimeters");
+            appendClassHeader(3, my_data.mean.toFixed(3) + " mm");
             appendClassHeader(4, (my_data.ovality * 100).toFixed(1) + "%");
-            appendClassHeader(5, (my_data.deviation * 1000).toFixed(1) + " micrometers");
+            appendClassHeader(5, (my_data.deviation * 1000).toFixed(1) + " μm");
             appendClassHeader(6, my_data.dateprod.substring(0, my_data.dateprod.length-9));
 
             document.getElementById("Color").style.backgroundColor = myColor;
