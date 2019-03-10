@@ -71,12 +71,31 @@ def readCSV(filename):
 
 
 #       -----  HASHES FILENAME FOR QR CODE GENERATION ------
+# def hashData(dataToHash):
+#     now = datetime.datetime.now()
+#     currentDate = now.strftime("%d.%m.%Y")
+#     newData = str(dataToHash) + '.' + currentDate
+#     hashObject = hashlib.md5(newData.encode())
+#     return hashObject.hexdigest()
+
 def hashData(dataToHash):
     now = datetime.datetime.now()
     currentDate = now.strftime("%d.%m.%Y")
-    newData = str(dataToHash) + '.' + currentDate
-    hashObject = hashlib.md5(newData.encode())
-    return hashObject.hexdigest()
+    currentDateSplit = currentDate.split('.')
+
+    currentMonth = currentDateSplit[1]
+    currentYear = currentDateSplit[2]
+    currentYearLastTwo = currentYear[2:]
+
+    hashidsCode = hashids.Hashids(salt="Mora-Solutions")
+    hashID = hashidsCode.encode(int(dataToHash), int(currentMonth), int(currentYearLastTwo))
+    # print(hashidsCode.decode(hashID))
+
+    if (len(hashID) > 10):
+        difference = len(hashID) - 10
+        hashID = hashID[:-difference]
+
+    return hashID
 
 
 #       -----  ESTABLISHES CONNECTION WITH DATABASE ------
@@ -133,7 +152,8 @@ def saveToDatabase(filename):
                             attributeValueSplit = str(attributeNameValueSplit[1])
                             attributeValue = attributeValueSplit[2:-2]
                             if attributeValue == '999':
-                                if attributes.index(attribute) == 0 or attributes.index(attribute) == 1 or attributes.index(
+                                if attributes.index(attribute) == 0 or attributes.index(
+                                        attribute) == 1 or attributes.index(
                                         attribute) == 2:
                                     values[attributes.index(attribute)] = '!!!'
                                 else:
