@@ -1,146 +1,43 @@
 import csv
 import json
+import datetime
 #   import matplotlib.pyplot as plt
 #   import mpld3
 
+import hashids
 import CSVExchanging
 
+# testcode = "121.12.10.1999"
+# CSVExchanging.hashData(testcode)
 
-def default(o):
-    if isinstance(o, (datetime.date, datetime.datetime)):
-        str(o).replace('T', ' ')
-        return o.isoformat()
+# def hashData(dataToHash):
+#     now = datetime.datetime.now()
+#     currentDate = now.strftime("%d.%m.%Y")
+#     # newDataToHash = str(dataToHash) + currentDate
+#     currentDateSplit = currentDate.split('.')
+#     currentMonth = currentDateSplit[1]
+#     currentYear = currentDateSplit[2]
+#     currentYearLastTwo = currentYear[2:]
+#     # hashObject = hashlib.md5(newDataToHash.encode())
+#     # return hashObject.hexdigest()
+#     hashidsCode = hashids.Hashids(salt="Mora-Solutions")
+#     hashID = hashidsCode.encode(int(dataToHash), int(currentMonth), int(currentYearLastTwo))
+#     # print(hashidsCode.decode(hashID))
+#     if (len(hashID) > 10):
+#         difference = len(hashID) - 10
+#         hashID = hashID[:-difference]
+#     return hashID
 
+def hashData(dataToHash):
+    now = datetime.datetime.now()
+    currentDate = now.strftime("%d.%m.%Y")
+    newData = str(dataToHash) + '.' + currentDate
+    hashObject = hashlib.md5(newData.encode())
+    return hashObject.hexdigest()
 
-def JSONWrite(hashid):
-    cur = CSVExchanging.connectDB().cursor()
+# hashids = hashids.Hashids(salt="Mora-Solutions")
+# id = hashids.encode(123, 12, 10, 1999)
+# numbers = hashids.decode(id)
 
-    queryForCSV = 'SELECT spoolnumber, pathcsv FROM spool WHERE hashid = \'' + hashid + '\';'
-    cur.execute(queryForCSV)
-    queryForCSVResult = cur.fetchone()
+print(hashData('1207'))
 
-    filePathAttributes = str(queryForCSVResult).split(', ')
-    fileLocation = str(filePathAttributes[1])[1:-2]
-    fileName = str(filePathAttributes[0])[1:]
-    filePath = fileLocation + str(fileName) + '.csv'
-
-    myFilePath = 'C:\\Users\\fliesrgio\\Downloads\\CSV_Files_AcqSys\\spool\\' + str(fileName) + '.csv'
-
-    attributes = ['Ovality', 'Mean', 'StdDev', 'Length']
-    values = [999, 999, 999, 999]
-    valuesX = []
-    valuesY = []
-
-    #       fileCSV = open(filePath, 'r')
-    fileCSV = open(myFilePath, 'r')
-    csv_reader = csv.reader(fileCSV, delimiter=';')
-
-    while True:
-        try:
-            for line in csv_reader:
-                if len(line) == 5:
-                    valueX = str(str(line).split(', ')[2])[1:-1]
-                    if valueX != 'Length':
-                        valueX = float(valueX)
-                        firstValueY = float(str(line).split(', ')[3][1:-1])
-                        secondValueY = float(str(line).split(', ')[4][1:-2])
-                        valueYBadFormat = (firstValueY + secondValueY) / 2
-                        valueY = round(valueYBadFormat, 3)
-
-                        valuesX.append(valueX)
-                        valuesY.append(valueY)
-                try:
-                    for attribute in attributes:
-                        attributeNameValueSplit = str(line).split(',')
-                        attributeNameBadFormat = str(attributeNameValueSplit[0])
-                        attributeName = attributeNameBadFormat[2:-1]
-                        if attributeName == attribute:
-                            attributeValueSplit = str(attributeNameValueSplit[1])
-                            attributeValue = attributeValueSplit[2:-2]
-                            if attributeValue == '999':
-                                if attributes.index(attribute) == 0 or attributes.index(
-                                        attribute) == 1 or attributes.index(
-                                    attribute) == 2:
-                                    values[attributes.index(attribute)] = '!!!'
-                                else:
-                                    values[attributes.index(attribute)] = 999
-                                continue
-                            else:
-                                values[attributes.index(attribute)] = attributeValue
-                            break
-                except:
-                    break
-
-            JSONOvality = values[0]
-            JSONMean = values[1]
-            JSONDev = values[2]
-            JSONLength = values[3]
-
-            fileCSV.close()
-        except csv.Error:
-            str(line).replace('\0', '')
-            continue
-        break
-
-    queryForJSON = 'SELECT date, material, colorname, colorral, diameter, tolerance FROM spool WHERE hashid = \'' + hashid + '\';'
-    cur.execute(queryForJSON)
-    queryForJSONResult = cur.fetchone()
-    #   colorForGraph = 'orange'
-    JSONDate = queryForJSONResult[0]
-
-    attributeListBadFormat = str(queryForJSONResult).split(')')
-    attributeList = attributeListBadFormat[1]
-    attributeListSplit = str(attributeList).split(', ')
-
-    JSONMaterial = attributeListSplit[1]
-    JSONColorName = attributeListSplit[2]
-    '''
-    if JSONColorName.__contains__('BLUE'):
-        colorForGraph = 'blue'
-    elif JSONColorName.__contains__('RED'):
-        colorForGraph = 'red'
-    '''
-    JSONColorRal = attributeListSplit[3]
-    JSONDiameter = attributeListSplit[4]
-    JSONTolerance = attributeListSplit[5]
-    '''
-    sumY = 0
-    for y in valuesY:
-        sumY += y
-    avgValue = sumY / len(valuesY)
-    minValue = min(valuesY)
-    maxValue = max(valuesY)
-
-    axXMax = len(valuesX) / 10
-    axYMin = minValue - 0.01
-    axYMax = maxValue + 0.025
-
-    fig = plt.figure(figsize=(15, 4))
-    ax = plt.subplot()
-    ax.plot(valuesX, valuesY, linewidth=1, color=colorForGraph)
-    plt.title('Spool ' + hashid, fontsize='xx-large', fontweight='extra bold')
-    plt.xlabel('Test, number(x10)', fontsize='x-large', fontweight='extra bold')
-    plt.ylabel('Diameter, mm', fontsize='x-large', fontweight='extra bold')
-    plt.axis([0, axXMax, axYMin, axYMax])
-    plt.tick_params(axis='both', direction='out', length=5)
-    plt.grid(True)
-    ax.grid(color='black', linestyle='--', linewidth=1, alpha=0.75)
-    plt.show()
-    mpld3.save_html(fig, 'templates/test.html')
-    '''
-    spool = {
-        'date': str(JSONDate),
-        'material': JSONMaterial[1:-1],
-        'color': JSONColorName[1:-1],
-        'ral': JSONColorRal[1:-1],
-        'diameter': float(JSONDiameter),
-        'tolerance': float(JSONTolerance),
-        'ovality': float(JSONOvality),
-        'mean': float(JSONMean),
-        'deviation': float(JSONDev),
-        'length': float(JSONLength),
-    }
-
-    JSONSpool = json.dumps(spool, sort_keys=True, indent=1, default=default)
-    #   print(JSONSpool)
-    return str(JSONSpool)
